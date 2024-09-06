@@ -1,0 +1,71 @@
+
+<div class="container-fluid">
+	<div class="row">
+
+		<!-- 订单信息 -->
+		<div class="col-md-10 col-md-offset-1 col-sm-12">
+			<div class="box radius-none">
+				<div class="box-header with-border">
+					{:__('order_id')}：{$vo.order_id}
+				</div>
+				<div class="box-body">
+					<div class="col-md-6 padding">
+						{:__('goods name')}: {$vo.goodsDetail.name}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('buy num')}: {$vo.buy_num}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('price')}: {$vo.score}{:__('score')}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('order status')}: 
+						{switch name="vo.status"}
+							{case value="0"} <span class="label label-default">{:__('unpaid')}</span> {/case}
+							{case value="1"} <span class="label label-success">{:__('paid')}</span> {/case}
+							{case value="2"} <span class="label label-info">{:__('shipped')}</span> {/case}
+							{case value="3"} <span class="label label-primary">{:__('sign for')}</span> {/case}
+							{case value="4"} <span class="label label-warning">{:__('outing')}</span> {/case}
+							{case value="5"} <span class="label label-danger">{:__('out success')}</span> {/case}
+							{default /} {:__('order error')}
+						{/switch}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('pay time')}: {$vo.paytime|date="m-d-Y H:i:s",###}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('pay type')}: {:__($vo['paytype'])}{:__('pay text')}
+					</div>
+					<div class="col-md-12 padding">
+						{:__('order other')}: {$vo.other}
+						<p></p>
+					</div>
+					<div class="col-md-12 padding">
+						<fieldset>
+							<legend><h3>{:__('consignee user info')}</h3></legend>
+							<div class="col-md-6 padding">
+								{:__('country')}: {$vo.addressInfo.country}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('province / Region')}: {$vo.addressInfo.region}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('city')}: {$vo.addressInfo.city}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('zip code')}: {$vo.addressInfo.zip}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('mobile')}: {$vo.addressInfo.mobile}
+							</div>
+							<div class="col-md-12 padding">
+								{:__('detail address')}: {$vo.addressInfo.address}
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>

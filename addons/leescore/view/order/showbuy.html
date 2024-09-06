@@ -1,0 +1,255 @@
+{include file="common/meta" /}
+{include file="common/script" /}
+
+<div class="container-fluid">
+	<div class="row">
+		<form action="" name="postorder" class="postorder" method="post" id="postorder">
+			{:token('__token__', 'sha1')}
+			<!-- 确认订单信息 -->
+			<div class="col-sm-12">
+				<div class="box-body">
+					<div class="row">
+						<div class="col-md-6">
+							<div class="padding">
+								{:__('goods name')}: {$item.name}
+								<input type="hidden" value="" name="order_id" />
+							</div>
+							<div class="padding">
+								{:__('buy num')}: {$item.number}
+							</div>
+							<div class="padding"> 
+								{switch name="$item['paytype']"}
+									{case value="0"}
+										{:__('score')}: <span class="h2 text-warning"><?php echo ($item['scoreprice'] * $item['number']);?></span>
+									{/case}
+									{case value="1"}
+										{:__('price')}: <span class="h2 text-danger">￥<?php echo ($item['money'] * $item['number']);?> {:__('money')}</span>
+									{/case}
+									{case value="2"}
+										{:__('score')}: <span class="h2 text-warning"><?php echo ($item['scoreprice'] * $item['number']);?></span>
+										<br> 
+										<br>
+										{:__('price')}: <span class="h2 text-danger"><?php echo ($item['money'] * $item['number']);?></span> {:__('money')}
+									{/case}
+									{default /}
+										{:__('score')} 
+										<span class="h2 text-warning"><?php echo ($item['scoreprice'] * $item['number']);?></span>
+								{/switch}
+									<br>
+									<br>
+									<h3>支付方式：余额支付</h3>
+							</div>
+							{if($item.type != 1)}
+								<div class="padding">
+									{:__('order other')}
+									<br>
+									<br>
+									<textarea name="other" id="other" class="form-control" rows="8"></textarea>
+								</div>
+							{/if}
+							<br>
+							<br>
+							<div class="col-md-6 clearfix">
+								<a href="javascript:;" data-param="{$item.id}" id="order_pay" class="btn btn-block btn-warning">{:__('replace pay')}</a>
+							</div>
+						</div>
+						
+						{if($item.type != 1)}
+							<div class="col-md-6">
+								<h3>{:__('address list')} <a href="javascript:;" class="btn btn-sm btn-warning insert-address pull-right insert-address">{:__('add')}{:__('address')}</a></h3>
+								<br>
+								<ul class="goods-order-address">
+									{if(empty($add))}
+										<li>
+											{:__('empty')}
+										</li>
+									{/if}
+									{volist name="add" id="vi"}
+										<li {if($vi.status == 1)}class="margin-bottom item active" {else /}class="margin-bottom item"{/if} data-param="{$vi.id}">
+											<div class="col-sm-10 padding">
+												<ul>
+													<li class="pull-left">
+														{:__('zip code')}：{$vi.zip} {:__('mobile')}：{$vi.mobile}  {:__('consignee')}：{$vi.firstname} {$vi.lastname}
+														<p class="padding-top h5 bg-default">{:__('address')}：{$vi.country} {$vi.region} {$vi.city} {$vi.address}</p>
+													</li>
+												</ul>
+												<div class="clearfix"></div>
+											</div>
+											<div class="col-xs-2 no-padding">
+												<a href="javascript:;" data-id="{$vi.id}" style="height: 94px; line-height: 85px;" class="btn btn-flat btn-info btn-block edit-btn">{:__('edit')}</a>
+											</div>
+											
+											<div class="clearfix"></div>
+										</li>
+									{/volist}
+									<input type="hidden" value="{$item['id']}" name="gid" id="gid" />
+									<input type="hidden" value="" name="address_id" id="address_id" />
+									<input type="hidden" value="{$item['number']}" name="numbers" id="numbers" />
+								</ul>
+							</div>
+						{/if}
+							
+					</div>
+				</div>
+			</div>
+			<!-- ./ 确认订单信息 -->
+		</form>
+	</div>
+</div>
+<!-- Layer -->
+<script src="__CDN__/assets/libs/fastadmin-layer/dist/layer.js"></script>
+<script>
+	$(document).ready(function() {
+		var index = parent.layer.getFrameIndex(window.name); //获取窗口索引
+		var active = $(".goods-order-address .active");
+
+		if(active.length < 1)
+		{
+			$('.goods-order-address .item').eq(0).addClass('active');
+		}
+
+		$("#address_id").val($('.goods-order-address .active').attr("data-param"));
+
+		//支付方式
+		$(".pay").on('click', function() {
+			$("input[type=radio]").removeAttr('checked');
+			$(".pay").removeClass('pay-active');
+			$(this).addClass('pay-active');
+			$(this).prev("input[type=radio]").prop("checked","checked");
+		});
+		
+		//核对收货地址数量最多10个
+		$('.insert-address').on('click', function() {
+			$.ajax({
+				url: '{:addon_url("leescore/address/check")}',
+				type: 'get',
+				dataType: 'json',
+				
+				success: function (result)
+				{
+					if(result >= 10) return false;
+					parent.layer.open({
+						type: 2,
+						title: '{:__("address")}{:__("add")}',
+						cancel: function(){
+							window.location.reload();
+						},
+						shadeClose: true,
+						shade: 0.7,
+						area: ['70%', '90%'],
+						content: '{:addon_url("leescore/address/add")}' //iframe的url
+					});
+				}
+			});
+		});
+
+		//提交订单
+		$("#order_pay").on('click', function() {
+
+			var other = $("#other").val();
+			var aurl = "{:addon_url('leescore/order/pay')}";
+			var address = $("#address_id");
+			var buynum = '{$item["number"]}';
+			if(address.length > 0 && address.val() == ''){
+				$("#address_id").focus();
+				layer.msg("{:__('art empty tip')}");
+				return false;
+			}
+			if('{$item["paytype"]}' != '0')
+			{
+				layer.confirm('本次购买将消耗'+ ('{$item["scoreprice"]}' * buynum)+"积分, "+ ('{$item["money"]}' * buynum) +"元，是否继续购买？", {
+					title: "消费确认",
+					btn: ['现在支付','不了，我再看看'] //按钮
+				}, function(){
+					$.ajax({
+						url: aurl,
+						type: 'post',
+						dataType: 'json',
+						data: {gid: '{$item["id"]}' ,other: other, address: address.val(), numbers: buynum},
+
+						success: function(json){
+							if(json.code == true)
+							{
+								layer.confirm(json.msg, {
+									btn: ['{:__("yes")}','{:__("no")}'] //按钮
+								}, function(){
+									parent.location.href = "{:addon_url('leescore/order/index')}";
+								}, function(){
+									parent.layer.close(index);
+								});
+							}else{
+								layer.alert(json.msg, {
+									icon: 2,
+									skin: 'layer-ext-moon'
+								});
+							}
+						}
+					});
+				}, function(){
+					layer.close(index);
+				});
+				//$("#postorder").attr("action",aurl);
+				//$("#postorder").submit();
+			}else{
+				layer.confirm('本次购买将消耗'+ ('{$item["scoreprice"]}' * buynum)+"积分，是否继续购买？", {
+					title: "消费确认",
+					btn: ['现在支付','不了，我再看看'] //按钮
+				}, function(){
+					$.ajax({
+						url: aurl,
+						type: 'post',
+						dataType: 'json',
+						data: {gid: '{$item["id"]}' ,other: other, address: address.val(), numbers: buynum},
+
+						success: function(json){
+							if(json.code == true)
+							{
+								layer.confirm(json.msg, {
+									btn: ['{:__("yes")}','{:__("no")}'] //按钮
+								}, function(){
+									parent.location.href = "{:addon_url('leescore/order/index')}";
+								}, function(){
+									parent.layer.close(index);
+								});
+							}else{
+								layer.alert(json.msg, {
+									icon: 2,
+									skin: 'layer-ext-moon'
+								});
+							}
+						}
+					});
+				}, function(){
+					layer.close(index);
+				});
+			}
+		});
+
+
+		$('.edit-btn').on('click', function() {
+			var bwith = $("body").width();
+    		var id = $(this).attr('data-id');
+    		var w = bwith < 768 ? '100%' : '100%';
+    		var eurl = '{:addon_url("leescore/address/edit")}';
+    		eurl = eurl + "?id="+ id;
+			parent.layer.open({
+				type: 2,
+				title: '{:__("address")}{:__("edit")}',
+				area: ['70%','90%'],
+				shadeClose: true,
+				cancel: function(){
+					window.location.reload();
+				},
+				shade: 0.7,
+				//area: [w, w],
+				content: eurl //iframe的url
+			});
+		});
+
+		$('.goods-order-address .item').on('click', function() {
+			$('.goods-order-address .item').removeClass('active');
+			$(this).addClass('active');
+			$("#address_id").val($(this).attr("data-param"));
+		});
+	});
+</script>

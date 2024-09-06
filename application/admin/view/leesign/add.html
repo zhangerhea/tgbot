@@ -1,0 +1,46 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label for="c-uid" class="control-label col-xs-12 col-sm-2">{:__('Uid')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-uid" data-rule="required" class="form-control" name="row[uid]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-sign_ip" class="control-label col-xs-12 col-sm-2">{:__('Sign_ip')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sign_ip" class="form-control" name="row[sign_ip]" type="text">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-sign_time" class="control-label col-xs-12 col-sm-2">{:__('Sign_time')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sign_time" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[sign_time]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-sign_reward" class="control-label col-xs-12 col-sm-2">{:__('Sign_reward')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sign_reward" class="form-control" name="row[sign_reward]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-sign_extra_reward" class="control-label col-xs-12 col-sm-2">{:__('Sign_extra_reward')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sign_extra_reward" class="form-control" name="row[sign_extra_reward]" type="number">
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="c-max_sign" class="control-label col-xs-12 col-sm-2">{:__('Max_sign')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-max_sign" class="form-control" name="row[max_sign]" type="number">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-success btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,413 @@
+<!-- iCheck -->
+<script src="__CDN__/assets/addons/leescore/plugin/icheck-1.0.3/icheck.min.js"></script>
+<link rel="stylesheet" href="__CDN__/assets/addons/leescore/plugin/icheck-1.0.3/skins/all.css">
+<style>
+	.order-lists{ max-height: 200px; overflow: hidden;}
+	.active th{ font-size: 13px; }
+	.order-item { margin-top: 20px; border-bottom: 1px dashed #dadada; padding-bottom: 20px;}
+	.details { color:#999; font-size: 14px; margin-top:5px; margin-bottom:5px;}
+	.padding-none { padding:0px; margin:0px;}
+	
+</style>
+<!-- ./ iCheck -->
+<!-- 按订单状态查看 -->
+<div class="container padding page-content">
+	<!-- 订单 && 地址栏切换按钮 -->
+	<div class="btn-group padding-min visible-xs" style="width: 100%">
+		<a href="{:addon_url('leescore/order/index')}" class="btn btn-flat btn-block btn-default" style="width: 50%;">{:__('store order')}</a>
+		<a href="{:addon_url('leescore/address/index')}" class="btn btn-flat btn-block btn-warning btn-block" style="width: 50%; margin-top: 0px;">{:__('address manage')}</a>
+		<div class="clearfix"></div>
+	</div>
+	<div class="clearfix"></div>
+	<div class="row">
+    	<div class="col-md-3">
+			{include file="common/user-nav"}
+		</div>
+
+		<div class="col-sm-9">
+			
+			<div class="layout-right">
+				
+				<!-- 面包屑路径导航 -->
+				<ol class="breadcrumb">
+					<li><a href="{:addon_url('leescore/index/index')}">{:__('store title')}</a></li>
+					<li class="active">{:__('my cart')}</li>
+				</ol>
+				<!-- 面包屑路径导航 -->
+
+				<!-- 开启了订单清理 -->
+				{if($config['open_clear'] == 1)}
+					<div class="text-danger fz-12 text-center">
+						提示：未支付的订单将会在<small class="text-danger">{$order_clear_time}</small>分钟后过期。
+					</div>
+				{/if}
+				<div class="row" >
+					<div class="col-md-12 col-xs-7" >
+						<h2>我的订单</h2>
+					</div>
+					<div class="col-xs-5 visible-xs" style="margin-top:5px">
+						<!-- Single button -->
+						<div class="btn-group pull-right">
+							<button type="button" class="btn btn-success dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							全部订单 <span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu">
+								<li><a href="?listType=">全部订单</a></li>
+								<li><a href="?listType=0">未支付</a></li>
+								<li><a href="?listType=1">已支付</a></li>
+								
+								<li><a href="?listType=2">已发货</a></li>
+								<li><a href="?listType=3">已签收</a></li>
+								<li><a href="?listType=-2">审核失败</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div style="border-bottom: 2px solid #ccc; padding-bottom:10px;"></div>
+				
+				<div class="radius-none">
+					<div class="box-body no-padding">
+						<div class="orders-list">
+							{if($list->isEmpty())}
+								<small class="text-muted">{:__('暂无订单')}</small>
+							{/if}
+							<ul>
+							{volist name="list" id="vo"}
+								<li class="order-item">
+									<div class="row">
+										<div class="col-md-3 col-xs-4">
+											<img src="{$vo['order_goods'][0]['goods_thumb']}" alt="{$vo['order_goods'][0]['goods_name']}" class="img-responsive">
+										</div>
+										<div class="col-md-3 col-xs-8 padding-none">
+											<div class="padding-none">订单号: {$vo.order_id}</div>
+											<p>
+												积分: {$vo.score_total|default='0'} <br>
+												金额: {$vo.money_total|default="0"} <br>
+												状态: 
+												{switch name="vo.status"}
+													{case value="-2"} <span class="label label-danger">{:__('admin faild')}</span> {/case}
+													{case value="-1"} <span class="label label-danger">{:__('订单已关闭')}</span> {/case}
+													{case value="0"} <span class="label label-default">{:__('unpaid')}</span> {/case}
+													{case value="1"} <span class="label label-success">{:__('paid')}</span> {/case}
+													{case value="2"} <span class="label label-info">{:__('shipped')}</span> {/case}
+													{case value="3"} <span class="label label-primary">{:__('sign for')}</span> {/case}
+													{case value="4"} <span class="label label-warning">{:__('outing')}</span> {/case}
+													{case value="5"} <span class="label label-danger">{:__('out success')}</span> {/case}
+													{default /} {:__('order error')}
+												{/switch}
+											</p>
+											
+										</div>
+										<div class="col-sm-4 col-xs-12">
+											<ul>
+												{volist name="$vo.order_goods" id="v"}
+												<li>
+													<div class="row">
+														<div class="col-md-8 col-xs-9">
+															* {$v.goods_name}
+														</div>
+														<div class="col-md-4 col-xs-3">
+															* {$v.buy_num}
+														</div>
+													</div>
+												</li>
+												{/volist}
+											</ul>
+										</div>
+										<div class="col-sm-2 col-md-2 hidden-xs hidden-sm">
+											<div class="margin-top">
+												{if($vo['status'] == '0')}
+												<a href="{:addon_url('leescore/order/postOrders',array('orderid' => $vo.id))}"  target="_blank" class="btn btn-warning btn-xs order-gotopay btn-block">{:__('order pay')}</a>
+												{/if}
+												<a  href="javascript:;" data-id="{$vo.id}" data-status="{$vo.status}" class="btn btn-default btn-block btn-xs radius-none show-details">
+													{:__('detail')}
+												</a>
+												
+												{in name="$vo.status" value="3,5,-2,-1"}
+													<a href="javascript:;" data-param="{$vo.id}" class="btn btn-danger btn-block radius-none btn-xs order-delete">{:__('delete order')}</a>
+												{/in}
+												{in name="$vo.status" value="2"}
+													<a href="javascript:void(0);" data-param="{$vo.id}" class="btn btn-warning btn-block btn-xs radius-none order-sign">{:__('order sign')}</a>
+												{/in}
+												{in name="$vo.status" value="0"}
+												<a href="javascript:;" data-param="{$vo.id}" data-goodsid="{$vo.id}" class="btn btn-xs btn-block btn-danger radius-none close-order">{:__('close order')}</a>
+												{/in}
+											</div>
+											
+										</div>
+										<div class="clearfix"></div>
+									</div>
+								</li>
+							{/volist}
+							</ul>
+						</div>
+						<div class="pager">
+							{if($list->render() != null)}
+								<div class="clearfix text-center">
+									{$list->render()}
+								</div>
+							{/if}
+						</div>
+						<!-- PC端列表 -->
+					</div>
+
+				</div>
+
+				<div class="goods-list">
+
+				</div>
+				<div class="col-sm-12 padding text-center page">
+					
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Layer -->
+<script src="__CDN__/assets/libs/fastadmin-layer/dist/layer.js"></script>
+<script>
+	$(document).ready(function() {
+		$('input').iCheck({
+			checkboxClass: 'icheckbox_minimal-orange',
+			radioClass: 'iradio_minimal',
+			increaseArea: '10%' // optional
+		});
+
+		//全选
+		$('input.all').on('ifChecked', function(){
+			$('input.ids').iCheck('check');
+		});
+
+		//取消全选
+		$('input.all').on('ifUnchecked', function(){
+			$('input.ids').iCheck('uncheck');
+		});
+
+		//删除订单
+		$(".order-delete").on('click', function() {
+			var id = $(this).attr("data-param");
+			layer.confirm('{:__("delete order tip")}', {
+				icon: 2,
+				title: '{:__("action tips")}',
+				btn: ['{:__("yes")}','{:__("no")}'] //按钮
+			}, function(){
+				$.ajax({
+					url: '{:addon_url("leescore/order/delone")}',
+					type: 'get',
+					dataType: 'json',
+					data: {id: id},
+
+					success:  function (json)
+					{
+						if(json.status == true)
+						{
+							layer.msg('{:__("delete success")}',{
+								icon: 6
+							});
+							setTimeout(function() {
+								window.location.reload();
+							}, 2000);
+						}else{
+							layer.msg('{:__("delete faild param error")}',{
+								icon: 2
+							});
+						}
+					}
+				});
+				
+			}, function(){
+				layer.close();
+			});
+			
+		});
+
+		//关闭订单
+		$(".close-order").on('click', function() {
+			var id = $(this).attr("data-param");
+			layer.confirm("订单关闭后将不可恢复, 是否继续关闭订单？",{
+				title: "{:__('close title')}",
+				btn: ["{:__('close')}","{:__('cannel')}"],
+			},function(){
+				$.ajax({
+					url: '{:addon_url("leescore/order/closeOrder")}',
+					type: 'get',
+					dataType: 'json',
+					data: {id: id},
+					success: function (json)
+					{
+						//console.log(json);
+						if(json.status == true)
+						{
+							layer.msg('{:__("order close success")}',{
+								icon: 6
+							});
+							setTimeout(function() {
+								window.location.reload();
+							}, 2000);
+						}else{
+							layer.msg('{:__("order close faild param error")}',{
+								icon: 2
+							});
+							console.log(json.msg);
+						}
+					}
+				});
+			},function(){
+				layer.close();
+			});
+		});
+
+		//删除选中订单
+		$(".del-selected").on('click', function() {
+			var empty = true;
+
+			//检查选中状态
+			$(".ids").each(function(index, el) {
+				if($(this).prop("checked") == true)
+				{
+					empty = false;
+				}
+			});
+
+			//没有被选中的订单
+			if(empty == true){
+				layer.msg('{:__("please selected order")}',{icon: 7});
+				return false;
+			} 
+
+			//序列化选中ID
+			var ids = $(".ids").serialize();
+			layer.confirm("订单删除后将不可恢复, 您是否要继续删除选中的订单？", 
+				{
+					title: "删除询问",
+					btn: ['是的, 我要继续删除','不了, 我点错的'] //按钮
+				}, 
+				function()
+				{
+					layer.msg('123');
+					$.ajax({
+						url: '{:addon_url("leescore/order/delete")}'+"?"+ids,
+						type: 'post',
+						dataType: 'json',
+						data: {data: ids},
+
+						success: function (json)
+						{
+							if(json.status == true)
+							{
+								layer.msg('{:__("delete success")}', {
+									icon: 6
+								});
+								setTimeout(function(){
+									window.location.reload();
+								}, 2000);
+							}else{
+								layer.msg('{:__("delete faild param error")}', {
+									icon: 2
+								});
+							}
+						}
+					}).fail(function() {
+						console.log("Ajax请求发生错误");
+					});
+				}, 
+				function()
+				{
+					layer.close();
+				});			
+			return false;
+		});
+
+		//内容详情
+		$('.show-details').on('click', function() {
+			var bwith = $("body").width();
+    		var id = $(this).attr('data-id');
+    		var btnurl = "{:addon_url('leescore/order/postOrders')}";
+			var btnurl = btnurl + "?orderid=" + id;
+			var status = $(this).attr('data-status');
+    		var url = '{:addon_url("leescore/order/details")}';
+    		url = url + "?id=" + id;
+    		var w = bwith > 768 ? '75%' : '100%';
+    		var btn = status == 0 ? ['{:__("go to pay")}','{:__("close")}'] : '';
+			layer.open({
+				type: 2,
+				title: '{:__("order detail")}',
+				shadeClose: true,
+				shade: 0.7,
+				closeBtn:1,
+				area: [w, w],
+				btn: btn,
+				yes: function(index, layero){
+					if(btnurl != false)
+					{
+						window.location.href = btnurl;
+					}else{
+						layer.close(index);
+					}
+				},function(){
+					layer.close(index);
+				},
+
+				content: url //iframe的url
+			});
+		});
+
+		/*条件菜单宽度计算*/
+
+			// body宽度
+    		var bodyw = $("body").width();
+    		var wsum = 0;
+    		$(".order-nav li").each(function(index, el) {
+    			//容器宽度+左右内间距
+    			var w = $(this).width() + 20;
+    			wsum = wsum + w;
+    		});
+
+    		// 转换成百分比
+    		var odd = (wsum / bodyw) > 1 ? (wsum / bodyw) * 100 : 1 * 100;
+
+    		// 设置容器宽度
+    		$(".order-nav").width(odd+"%");
+    		$(".order-nav").parent("div.text-muted").width(odd+"%");
+
+		/*条件菜单宽度计算*/
+
+
+
+		//确认收货
+		$(".order-sign").on('click', function() {
+			var id = $(this).attr('data-param');
+			var btn = $(this);
+			layer.confirm('{:__("order sign tip")}', {
+				icon: 3,
+				title: '{:__("action tips")}',
+				btn: ['{:__("yes")}','{:__("no")}'] //按钮
+			}, function(){
+				var uri = '{:addon_url("leescore/order/orderSign")}';
+				$.ajax({
+					url: uri,
+					type: 'post',
+					dataType: 'json',
+					data: {id: id},
+
+					success: function(result){
+						if(result != true)
+						{
+							console.log(result);
+						}else
+						{
+							btn.parent("td").prev("td").prev("td").html("<span class=\"label label-primary\">{:__('sign for')}</span>");
+
+							btn.parent("td").append("<a href=\"javascript:void(0);\" data-param=\""+ id +"\" class=\"btn btn-danger btn-xs order-delete\">{:__('delete order')}</a>").children('a.order-sign').remove();
+							layer.msg('{:__("action success")}');
+						}
+					}
+				});
+				
+			}, function(){
+				layer.close();
+			});
+		});
+	});
+</script>

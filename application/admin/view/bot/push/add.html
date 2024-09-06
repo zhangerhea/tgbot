@@ -1,0 +1,40 @@
+<form id="add-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Bot_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-bot" data-rule="required"  class="form-control selectpage" type="text"
+                   data-source="bot/Bot/index"
+                   name="row[bot_id]"
+                   data-order-by="id" data-field="bot_name"  data-format-item="{bot_name}"   >
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sendtype')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sendtype" class="form-control" name="row[sendtype]" readonly type="text" value="sendMessage">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Text')}:</label>
+        <div class="col-xs-12 col-sm-10">
+            <p class="help-block">支持标签： {{first_name}}, {{last_name}}</p>
+            <textarea id="c-text" class="form-control editor-markdown" rows="10" data-rule="required" name="row[text]" cols="50"></textarea>
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Push_time')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-push_time" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[push_time]" type="text" value="{:date('Y-m-d H:i:s')}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>

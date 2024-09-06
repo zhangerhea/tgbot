@@ -1,0 +1,48 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Bot_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-bot_id" data-rule="required" type="hidden" class="form-control " name="row[bot_id]"  value="{$bot.id}">
+            <input id="c-bot" data-rule="required"  class="form-control " name="row[bot]" readonly type="text" value="{$bot.bot_name}（{$bot.token}）">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sendtype')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sendtype" class="form-control" name="row[sendtype]" readonly type="text" value="{$row.sendtype|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Text')}:</label>
+        <div class="col-xs-12 col-sm-10">
+            <p class="help-block">支持标签： {{first_name}}, {{last_name}}</p>
+            <textarea id="c-text" class="form-control  editor-markdown" rows="10" data-rule="required" name="row[text]" cols="50">{$row.text|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            
+            <div class="radio">
+            {foreach name="statusList" item="vo"}
+            <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="$row.status"}checked{/in} /> {$vo}</label> 
+            {/foreach}
+            </div>
+
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Push_time')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-push_time" class="form-control datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" data-use-current="true" name="row[push_time]" type="text" value="{:$row.push_time?datetime($row.push_time):''}">
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-10">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,238 @@
+
+
+<div class="padding-min visible-xs">
+	<a href="javascript:;" class="btn btn-default btn-flat btn-block insert-address">{:__('新增收货地址')}</a>
+</div>
+
+<!-- 订单 && 地址栏切换按钮 -->
+<div class="btn-group padding-min visible-xs" style="width: 100%">
+	<a href="{:addon_url('leescore/order/index')}" class="btn btn-flat btn-block btn-default" style="width: 50%;">{:__('store order')}</a>
+	<a href="{:addon_url('leescore/address/index')}" class="btn btn-flat btn-block btn-warning btn-block" style="width: 50%; margin-top: 0px;">{:__('address manage')}</a>
+</div>
+
+<!-- ./订单 && 地址栏切换按钮 -->
+<div class="clearfix"></div>
+<!-- 按订单状态查看 -->
+{volist name="list" id="vo"}
+	<div class="box box-default radius-none visible-xs" style="margin-top:5px;">
+		<div class="box-body box-profile">
+			<ul class="list-group list-group-unbordered">
+				<li class="list-group-item" style="border-top: 0px;">
+					<b>{:__('consignee')}</b> <a class="pull-right">{$vo.truename}</a>
+				</li>
+				<li class="list-group-item">
+					<b>{:__('mobile')}</b> <a class="pull-right">{$vo.mobile}</a>
+				</li>
+				<li class="list-group-item">
+					<b>{:__('zip')}</b> <a class="pull-right">{$vo.zip}</a>
+				</li>
+				<div class="box-body no-padding margin-top">
+					<b>{:__('detail address')}</b>
+					<div class="pull-right bg-gray padding-min"><small> {$vo.country} {$vo.region} {$vo.city} {$vo.address} </small></div>
+				</div>
+			</ul>
+			<div class="btn-group" style="width: 100%">
+				<a href="javascript:;" style="width: 33%;" data-id="{$vo.id}" class="btn btn-warning btn-block edit-btn">{:__('edit')}</a>
+				<a href="javascript:;" style="width: 33%; margin-top:0px;" data-id="{$vo.id}" class="btn btn-danger btn-block delete">{:__('delete')}</a>
+				{if($vo['status'] == 1)}
+					<a href="javascript:;" style="width: 33%;" data-id="{$vo.id}" data-set="default" class="btn btn-default disabled" disabled> {:__('default')}</a>
+				{else /}
+					<a href="javascript:;" style="width: 33%;" data-id="{$vo.id}" class="btn bg-orange setDefaultAddress"> {:__('设为默认地址')}</a>
+				{/if}
+			</div>
+		</div>
+		<!-- /.box-body -->
+	</div>
+{/volist}
+<!-- Mobile-Nav && Top-->
+
+<div class="container padding page-content hidden-xs">
+	<div class="row">
+    	<div class="col-md-3">
+			{include file="common/user-nav"}
+		</div>
+
+		<div class="col-md-9">
+			<div class="layout-right">
+					<!-- 面包屑路径导航 -->
+					<ol class="breadcrumb">
+						<li><a href="{:addon_url('leescore/index/index')}">{:__('store title')}</a></li>
+						<li class="active">{:__('地址管理')}</li>
+					</ol>
+					<!-- 面包屑路径导航 -->
+					<div class="box radius-none">
+						<div class="box-header with-border">
+							<h3 class="box-title">{:__('address list')}</h3>
+							<div class="pull-right">
+								<a href="javascript:;" class="btn btn-xs btn-info insert-address">{:__('add')}</a>
+							</div>
+						</div>
+						<!-- /.box-header -->
+						<div class="box-body">
+							<div class="" style="border:1px solid #fafafa">
+								<table class="table table-responsive table-hover no-margin">
+									<thead>
+										<tr class="active">
+											<th>{:__('consignee')}</th>
+											<th>{:__('detail address')}</th>
+											<th>{:__('mobile')}</th>
+											<th>{:__('action')}</th>
+											<th></th>
+										</tr>
+										{if(empty($list))}
+											<tr>
+												<td colspan="7">{:__('请添加地址')}</td>
+											</tr>
+										{/if}
+									</thead>
+									<tbody>
+										{volist name="list" id="vo"}
+											<tr>
+												<td>{$vo.truename}</td>
+												<td>
+													<small>{$vo.country} {$vo.region} {$vo.city} {$vo.address}</small>
+												</td>
+												<td>{$vo.mobile}</td>
+												<td>
+													<div class="btn-group">
+														<a href="javascript:;" data-id="{$vo.id}" class="btn btn-xs btn-warning edit-btn"><i class="fa fa-pencil"></i> {:__('edit')}</a>
+														<a href="javascript:;" data-id="{$vo.id}" class="btn btn-xs btn-danger delete"><i class="fa fa-close"></i> {:__('delete')}</a>
+													</div>
+												</td>
+												<td class="setDefaultBtn">
+													{if($vo['status'] == 1)}
+														<a href="javascript:;" data-id="{$vo.id}" data-set="default" class="btn btn-xs btn-success disabled" disabled> {:__('default')}</a>
+													{else /}
+														<a href="javascript:;" data-id="{$vo.id}" class="btn btn-xs bg-orange setDefaultAddress"> {:__('set default')}</a>
+													{/if}
+												</td>
+											</tr>
+										{/volist}
+									</tbody>
+								</table>
+							</div>
+						</div>
+						<!-- /.box-body -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Layer -->
+<script src="__CDN__/assets/libs/fastadmin-layer/dist/layer.js"></script>
+<script>
+	$(document).ready(function() {
+		
+		//核对收货地址数量最多10个
+		$('.insert-address').on('click', function() {
+			var bwith = $("body").width();
+    		var id = $(this).attr('data-id');
+    		var w = bwith < 768 ? '100%' : '80%';
+
+			$.ajax({
+				url: '{:addon_url("leescore/address/check")}',
+				type: 'get',
+				dataType: 'json',
+				
+				success: function (result)
+				{
+					if(result >= 10) return false;
+					layer.open({
+						type: 2,
+						title: '{:__("address")}{:__("add")}',
+						cancel: function(){
+							window.location.reload();
+						},
+						shadeClose: true,
+						shade: 0.7,
+						area: [w, w],
+						content: '{:addon_url("leescore/address/add")}' //iframe的url
+					});
+				}
+			});
+		});
+
+		$('.edit-btn').on('click', function() {
+			var bwith = $("body").width();
+    		var id = $(this).attr('data-id');
+    		var w = bwith < 768 ? '100%' : '80%';
+    		var eurl = '{:addon_url("leescore/address/edit")}';
+    		eurl = eurl + "?id="+ id;
+			layer.open({
+				type: 2,
+				title: '{:__("address")}{:__("edit")}',
+				shadeClose: true,
+				cancel: function(){
+					window.location.reload();
+				},
+				shade: 0.7,
+				area: [w, w],
+				content: eurl //iframe的url
+			});
+		});
+
+		$(".delete").on('click', function() {
+			var id = $(this).attr('data-id');
+			var btn = $(this);
+			layer.confirm('{:__("delete ask tip")}', {
+				icon: 2,
+				title: '{:__("action tips")}',
+				btn: ['{:__("yes")}','{:__("no")}'] //按钮
+			}, function(){
+				var uri = '{:addon_url("leescore/address/delete")}';
+				$.ajax({
+					url: uri,
+					type: 'post',
+					dataType: 'json',
+					data: {id: id},
+
+					success: function(result){
+						if(result != true)
+						{
+							console.log(result);
+						}else
+						{
+							btn.parent("td").parent("tr").remove();
+							layer.msg('{:__("action success")}');
+						}
+					}
+				});
+				
+			}, function(){
+				layer.close();
+			});
+		});
+		
+		$(".setDefaultBtn").on('click', ".setDefaultAddress", function() {
+		//$(".setDefaultBtn").on('click', "setDefaultAddress", function() {
+			var id = $(this).attr('data-id');
+			var btn = $(this);
+			var uri = '{:addon_url("leescore/address/setDefaultAddress")}';
+			$.ajax({
+				url: uri,
+				type: 'post',
+				dataType: 'json',
+				data: {id: id},
+
+				success: function(result){
+					if(result != true)
+					{
+						console.log(result);
+					}else
+					{
+						var nid = $("tbody tr td a[data-set=default]").parent("td").children('a[data-set=default]').attr('data-id');
+
+						$("tbody tr td a[data-set=default]").parent("td").append("<a href=\"javascript:;\" data-id=\""+ nid +"\" class=\"btn btn-xs bg-orange setDefaultAddress\"> {:__('set default')}</a>").children('a[data-set=default]').remove();
+
+						var setid = btn.attr('data-id');
+						btn.parent("td").html("<a href=\"javascript:;\" data-id=\""+ setid +"\" data-set=\"default\" class=\"btn btn-xs btn-success disabled\" disabled> {:__('default')}</a>");
+						layer.msg('{:__("action success")}');
+					}
+				}
+			});
+		});
+
+	});
+</script>

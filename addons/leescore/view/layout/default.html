@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="cn">
+    <head>
+    	<meta charset="utf-8">
+        {include file="common/meta" /}
+        <?php 
+        	$title = !isset($title) ? $site['name'] : $title;
+        ?>
+        <title>{:__('store title')} - {$title}</title>
+        <link href="__CDN__/assets/css/user.css?v={$Think.config.site.version}" rel="stylesheet">
+        {include file="common/script" /}
+		<script>
+			$(document).ready(function () {
+				$.ajax({
+					type: "post",
+					url: "{:addon_url('leescore/cart/getUserCartTotal')}",
+					data: "data",
+					dataType: "html",
+					success: function (res) {
+						$(".cart-number").html(res);
+					}
+				});
+			});
+		</script>
+    </head>
+
+    <body class="no-padding-mobile">
+		<div class="">
+			<nav id="mainNav" class="navbar navbar-inverse radius-none" role="navigation">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-2 visible-lg visible-md">
+							<div class="nav-top-tips">
+								<?php 
+									$logo = !empty(config('addonConfig.logo')) ? config('addonConfig.logo') : cdnurl('/assets/addons/leescore/images/logo.png');
+								?>
+								<a href="{:addon_url('leescore/index/index')}"><img src="{$logo}" style="max-height: 120px;max-width:300px;" class="logo"></a>
+							</div>
+						</div>
+						<div class="navbar-header">
+							
+							<div style="width:75%; float: left; line-height:40px; padding: 8px 10px;" class="visible-xs">
+								<form action="{:addon_url('leescore/goods/index')}" name="search" method="get" id="search_keywords">
+									<input type="text" class="form-control search-input" name="keywords" value="{:input('get.keywords')}"  placeholder="{:__('search keywords tip')}">
+								</form>
+							</div>
+							
+							<button type="button" class="navbar-toggle collapsed radius-none" data-toggle="collapse" data-target="#navbar-collapse-menu">
+								<span class="sr-only">Toggle navigation</span>
+								<span class="icon-bar"></span>
+								<span class="icon-bar text-white"></span>
+								<span class="icon-bar"></span>
+							</button>
+						</div>
+
+						<div class="col-sm-12 col-xs-12 col-md-10 col-lg-10">
+							<div class="collapse navbar-collapse" id="navbar-collapse-menu">
+								<ul class="nav navbar-nav navbar-right">
+									<!-- <li><a href="/">{:__('Home')}</a></li> -->
+									<li class="visible-xs"><a href="{:addon_url('leescore/index')}"><i class="fa fa-home "></i> {:__('store title')}</a></li>
+									<li><a href="{:addon_url('leescore/goods/index')}"><i class="fa fa-th-list"></i> {:__('商品分类')}</a></li>
+								
+									{if $user}
+										<li>
+											<a href="{:url('index/user/index')}" class="dropdown-toggle" data-toggle="dropdown" style="">
+												<span class="img-circle"><img style="height: 20px; width: 20px" class="img-circle" src="{$user.avatar}" alt=""> </span> <span style="text-transform: capitalize; letter-spacing: 0px;">{$user.username} ( <?php
+													if(strlen($user['score']) > 6 ){
+														echo substr($user['score'], 0, 7);
+													}else{
+														echo $user['score'];
+													}
+												?> {:__('score')})<b class="caret"></b></span>
+											</a>
+											<ul class="dropdown-menu">
+												{if $user}
+													<li><a href="{:url('index/user/index')}"><i class="fa fa-user-circle fa-fw"></i>{:__('User center')}</a></li>
+													<li><a href="{:addon_url('leescore/order')}"><i class="fa fa-heart fa-fw"></i>{:__('store order')}</a></li>
+													<li><a href="{:addon_url('leescore/cart/index')}" class="shopping-cart"><i class="fa fa-shopping-cart fa-fw"></i>{:__('add cart')}[<small class="text-danger cart-number">0</small>]</a></li>
+													<li><a href="{:addon_url('leescore/address')}"><i class="fa fa-map-marker fa-fw"></i>{:__('收货地址')}</a></li>
+													<li><a href="{:url('index/user/profile')}"><i class="fa fa-user-o fa-fw"></i>{:__('Profile')}</a></li>
+													<li><a href="{:url('index/user/changepwd')}"><i class="fa fa-key fa-fw"></i>{:__('Change password')}</a></li>
+													<li><a href="{:url('index/user/logout')}"><i class="fa fa-sign-out fa-fw"></i>{:__('Sign out')}</a></li>
+												{else /}
+													<li><a href="{:url('index/user/login')}"><i class="fa fa-sign-in fa-fw"></i> {:__('Sign in')}</a></li>
+													<li><a href="{:url('index/user/register')}"><i class="fa fa-user-o fa-fw"></i> {:__('Sign up')}</a></li>
+												{/if}
+											</ul>
+										</li>
+										
+									{else /}
+										<li><a href="{:url('index/user/register')}"><i class="fa fa-user"></i> {:__('register')}</a></li>
+										<li><a href="{:url('index/user/login')}"><i class="fa fa-unlock-alt"></i> {:__('login')}</a></li>
+									{/if}
+
+									<li class="hidden-xs">
+										<a class="sign-btn pc-sign-btn" href="javascript:void(0);">{:__('每日签到')}</a>
+									</li>	
+									<li class="visible-xs">
+										<a class="sign-btn" href="javascript:void(0);"><i class="fa fa-smile-o fa-fw"></i> {:__('每日签到')}</a>
+									</li>					
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- /.navbar-collapse -->
+				</div>
+				<!-- /.container-fluid -->
+			</nav>
+		</div>
+
+		<div class="clearfix"></div>
+
+        <main class="score-content">
+            {__CONTENT__}
+        </main>
+        <footer style="clear:both; padding: 0px;">
+            {include file="common/footer" /}
+        </footer>
+        <div class="clearfix"></div>
+
+		<style>
+			.pc-sign-btn {
+				height:30px;
+				line-height:20px !important;
+				padding: 5px 20px !important;
+				background-color:rgb(216, 142, 31);
+				margin-top: 20px;
+				color:#fff !important;
+				border-radius: 24px;
+			}
+			.navbar-inverse .navbar-nav > .open > a, .navbar-inverse .navbar-nav > .open > a:hover, .navbar-inverse .navbar-nav > .open > a:focus {
+				background-color:#fff !important; color:#666 !important;
+			}
+
+			.pc-sign-btn:hover, .pc-sign-btn:active, .pc-sign-btn:focus {
+				background-color:rgb(197, 120, 4) !important;
+				color:#fff !important;
+			}
+		</style>
+        <script>
+        	$(document).ready(function() {
+        		$("#search_keywords").on('submit', function() {
+        			var keywords = $(".search-input[name=keywords]").val();
+        			if(keywords == '') return false;
+        		});
+
+				$(".sign-btn").on("click", function(){
+					$.ajax({
+						type: "get",
+						url: "{:addon_url('leescore/index/userSign')}",
+						dataType: "json",
+						success: function (res) {
+							console.log(res);
+							if(res == false){
+								layer.msg('请先安装每日签到插件。', {
+									icon: 5
+								});
+								return false;
+							}else{
+								location.href = '{:addon_url("leesign/index")}';
+							}
+						}
+					});
+				});
+				$(".search-input").bind("keypress", function(event){
+					if (event.keyCode == 13) {
+						event.preventDefault();
+						//回车执行查询  
+						$('#search_keywords').submit();
+					}
+				});
+
+				$(window).bind("scroll", function(){
+					var scrollTop = $(document).scrollTop();
+					if(scrollTop > 99)
+					{
+						$("#mainNav").addClass("navbar-fixed-top");
+					} else if(scrollTop < 10) {
+						$("#mainNav").removeClass("navbar-fixed-top");
+					}
+				});
+        	});
+        </script>
+    </body>
+</html>

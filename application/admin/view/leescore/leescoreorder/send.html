@@ -1,0 +1,138 @@
+<style>
+	.padding { padding: 7px; }
+</style>
+<form id="send-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+	<fieldset>
+		<legend>
+			{:__('order detail info')}
+		</legend>
+		<!-- 订单信息 -->
+		<div class="col-md-10 col-md-offset-1 col-sm-12">
+			<div class="box radius-none">
+				<div class="box-header with-border">
+					{:__('order id')}：{$vo.order_id}
+				</div>
+				<div class="box-body">
+					<div class="col-md-12 padding">
+						<fieldset>
+							<legend><h3>{:__('order lists')}</h3></legend>
+							{volist name="$vo.get_order_goods" id="v"}
+								<div class="row">
+									<div class="col-sm-6 padding-none">
+										<ul style="list-style: none">
+											<li class="pull-left padding"><a href="{:addon_url('leescore/goods/details',array('gid' => $v.goods_id))}"><img src="{$v.goods_thumb}" class="img-responsive" style="height: 40px; width: 40px; border-radius: 3px;" /></a></li>
+											<li class="pull-left"><a href="{:addon_url('leescore/goods/details',array('gid' => $v.goods_id))}">{$v.goods_name}</a></li>
+										</ul>
+									</div>
+									<div class="col-sm-3 padding-none">
+										<span class="glyphicon glyphicon-piggy-bank text-warning" title="{:__('score')}"> {$v.score|default='0'}</span>
+										<br>
+										<span class="glyphicon glyphicon-yen text-danger" title="{:__('price')}"> {$v.money|default="0"}{:__("money")}</span>
+									</div>
+									<div class="col-sm-3">
+										* <span class="text-danger">{$v.buy_num}</span>
+									</div>
+									<div class="clearfix"></div>
+								</div>
+							{/volist}
+						</fieldset>
+
+						<hr>
+					</div>
+					<div class="col-md-6 padding">
+						{:__('score')}:  <span class="text-warning">{$vo.score_total}</span> {:__('score')}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('price')}: <span class="text-danger">{$vo.money_total}</span> {:__('danwei')}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('order status')}: 
+						{switch name="vo.status"}
+							{case value="-2"} <span class="label label-danger">{:__('order faild')}</span> {/case}
+							{case value="-1"} <span class="label label-default">{:__('Status -1')}</span> {/case}
+							{case value="0"} <span class="label label-default">{:__('unpaid')}</span> {/case}
+							{case value="1"} <span class="label label-success">{:__('paid')}</span> {/case}
+							{case value="2"} <span class="label label-info">{:__('shipped')}</span> {/case}
+							{case value="3"} <span class="label label-primary">{:__('sign for')}</span> {/case}
+							{case value="4"} <span class="label label-warning">{:__('outing')}</span> {/case}
+							{case value="5"} <span class="label label-danger">{:__('out success')}</span> {/case}
+							{default /} {:__('order error')}
+						{/switch}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('pay time')}: {$vo->paytime_text|default='-'}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('pay type')}: {:__($vo['paytype'])}{:__('pay text')}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('trade score')}: {$vo.trade_score}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('trade money')}: {$vo.trade_money}
+					</div>
+					<div class="col-md-12 padding">
+						{:__('order other')}: {$vo.other}
+						<p></p>
+					</div>
+					<div class="col-md-12 padding">
+						<fieldset>
+							<legend><h3>{:__('consignee user info')}</h3></legend>
+							<div class="col-md-6 padding">
+								{:__('country')}: {$vo.addressInfo.country}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('province / Region')}: {$vo.addressInfo.region}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('zip code')}: {$vo.addressInfo.zip}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('mobile')}: {$vo.addressInfo.mobile}
+							</div>
+							<div class="col-md-12 padding">
+								{:__('detail address')}: {$vo.addressInfo.address}
+							</div>
+						</fieldset>
+						<fieldset>
+							<legend><h3>{:__('replace result info')}</h3></legend>
+							<div class="form-group">
+								<input type="hidden" name="ids" id="ids" value="{$vo.id}">
+								<label for="c-virtual_sn" class="control-label col-xs-12 col-sm-3">{:__('virtual sn')}:</label>
+								<div class="col-xs-12 col-sm-8">
+									<input placeholder="优惠券号/物流单号" id="c-virtual_sn" class="form-control" name="virtual_sn" type="text" value="{$vo.virtual_sn}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="c-virtual_name" class="control-label col-xs-12 col-sm-3">{:__('virtual name')}:</label>
+								<div class="col-xs-12 col-sm-8">
+									<input placeholder="优惠券名/物流公司名" id="c-virtual_name" class="form-control" name="virtual_name" type="text" value="{$vo.virtual_name}">
+								</div>
+							</div>
+							<div class="form-group">
+								<label for="c-virtual_other" class="control-label col-xs-12 col-sm-3">{:__('virtual other')}:</label>
+								<div class="col-xs-12 col-sm-8">
+									<textarea name="virtual_other" id="c-virtual_other" class="form-control" rows="10">{$vo.result_other}</textarea>
+								</div>
+							</div>
+						</fieldset>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- 订单信息 -->
+	</fieldset>
+	
+	<div class="form-group layer-footer">
+		<label class="control-label col-xs-12 col-sm-2"></label>
+		<div class="col-xs-12 col-sm-8">
+			{in name="$vo.status" value="1"}
+				<button type="button" id="send" data-type="send" class="btn btn-success btn-embossed">{:__('send btn')}</button>
+				<button type="button" id="faild" data-type="result" class="btn btn-danger btn-embossed">{:__('关闭订单')}</button>
+			{/in}
+			{in name="$vo.status" value="0"}
+				<button type="button" id="faild" data-type="result" class="btn btn-danger btn-embossed">{:__('关闭订单')}</button>
+			{/in}
+		</div>
+	</div>
+</form>

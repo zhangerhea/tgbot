@@ -1,0 +1,294 @@
+<style>
+    .panel-recharge h3 {
+        margin-bottom: 15px;
+        margin-top: 10px;
+        color: #444;
+        font-size: 16px;
+    }
+
+    .row-paytype div input {
+        display: none;
+    }
+
+    .row-paytype img {
+        height: 35px;
+        margin: 8px;
+    }
+
+    .row-paytype label {
+        margin-bottom: 0;
+        width: 100%;
+        display: block;
+        cursor: pointer;
+        border: 1px solid #efefef;
+    }
+
+    .row-paytype label:hover {
+        background: rgba(100, 125, 255, 0.13);
+        border-color: rgba(100, 125, 255, 0.13);
+    }
+
+    .row-paytype label.active {
+        border-radius: 3px;
+        background: rgba(100, 125, 255, 0.23);
+        border: 1px solid rgba(100, 125, 255, 0.23);
+    }
+
+    .page-header small {
+        margin-top: 15px;
+        font-size: 13px;
+    }
+
+    .tabbable-panel {
+        /*border:1px solid #eee;*/
+        padding: 0px;
+    }
+
+    .tabbable-line > .nav-tabs {
+        border: none;
+        margin: 0px;
+    }
+
+    .tabbable-line > .nav-tabs > li {
+        margin-right: 2px;
+    }
+
+    .tabbable-line > .nav-tabs > li > a {
+        border: 0;
+        margin-right: 0;
+        color: #737373;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .tabbable-line > .nav-tabs > li > a > i {
+        color: #a6a6a6;
+    }
+
+    .tabbable-line > .nav-tabs > li.open, .tabbable-line > .nav-tabs > li:hover {
+        border-bottom: 3px solid rgba(56, 70, 132, 0.68);
+    }
+
+    .tabbable-line > .nav-tabs > li.open > a, .tabbable-line > .nav-tabs > li:hover > a {
+        border: 0;
+        background: none !important;
+        color: #333333;
+    }
+
+    .tabbable-line > .nav-tabs > li.open > a > i, .tabbable-line > .nav-tabs > li:hover > a > i {
+        color: #a6a6a6;
+    }
+
+    .tabbable-line > .nav-tabs > li.open .dropdown-menu, .tabbable-line > .nav-tabs > li:hover .dropdown-menu {
+        margin-top: 0px;
+    }
+
+    .tabbable-line > .nav-tabs > li.active {
+        border-bottom: 3px solid #384684;
+        position: relative;
+    }
+
+    .tabbable-line > .nav-tabs > li.active > a {
+        border: 0;
+        color: #333333;
+    }
+
+    .tabbable-line > .nav-tabs > li.active > a > i {
+        color: #404040;
+    }
+
+    .tabbable-line > .tab-content {
+        margin-top: -3px;
+        background-color: #fff;
+        border: 0;
+        border-top: 1px solid #eee;
+        padding: 15px 0;
+    }
+
+    .price-item {
+        height: 115px;
+        padding: 20px 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        width: 100%;
+        display: block;
+        text-align: center;
+        border: 1px solid #efefef;
+    }
+
+    .price-item:hover {
+        background: rgba(100, 125, 255, 0.13);
+        border-color: rgba(100, 125, 255, 0.13);
+    }
+
+    .price-item.active {
+        border-radius: 3px;
+        background: rgba(100, 125, 255, 0.23);
+        border: 1px solid rgba(100, 125, 255, 0.23);
+    }
+
+    .price-item > .title, .price-item > .subtext {
+        color: #444;
+        height: 25px;
+        line-height: 25px;
+    }
+
+    .price-item > .subtext {
+        color: #999;
+    }
+
+    .price-item > .price {
+        height: 30px;
+        line-height: 30px;
+        color: #fc4c57;
+        font-size: 24px;
+    }
+
+    .price-item > .price em {
+        font-size: 12px;
+        font-style: normal;
+    }
+
+    .row-paytype div input {
+        display: none;
+    }
+
+    .row-paytype img {
+        margin: 8px;
+        vertical-align: inherit;
+    }
+
+    .btn-recharge {
+        height: 40px;
+        line-height: 40px;
+        font-size: 14px;
+        padding: 0;
+    }
+
+    .row-rightlist .media .media-left img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .row-rightlist .media .media-heading {
+        font-size: 14px;
+        margin-top: 5px;
+        color: #444;
+        font-weight: 500;
+    }
+
+    .row-rightlist .media .media-body .text-muted {
+        height: 18px;
+        overflow: hidden;
+    }
+
+    .row-rightlist .media {
+        padding: 12px 0;
+    }
+</style>
+<div id="content-container" class="container">
+    <div class="row">
+        <div class="col-md-3">
+            {include file="common/sidenav" /}
+        </div>
+        <div class="col-md-9">
+            <div class="panel panel-default panel-recharge">
+                <div class="panel-body">
+                    <h2 class="page-header">VIP列表 <span><small class="pull-right text-danger">
+                        {if $vipInfo}
+                        当前VIP：{$vipInfo.name} <span data-toggle="tooltip" data-title="到期时间：{$vipInfo.expiredate}"><i class="fa fa-info-circle"></i></span>
+                        {else/}
+                        当前VIP：无
+                        {/if}
+                    </small></span></h2>
+                    {if $addonConfig.viptips}
+                    <div class="alert alert-warning-light">
+                        {$addonConfig.viptips}
+                    </div>
+                    {/if}
+                    <div class="clearfix"></div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="tabbable-panel">
+                                <div class="tabbable-line">
+                                    <ul class="nav nav-tabs ">
+                                        {foreach name="vipList" id="item"}
+                                        <li class="{if $key==0}active{/if}">
+                                            <a href="#tab_vip_{$item.level}" data-toggle="tab">
+                                                {$item.name}
+                                                {if $item.label}
+                                                <span class="label label-danger">{$item.label}</span>
+                                                {/if}
+                                            </a>
+                                        </li>
+                                        {/foreach}
+                                    </ul>
+                                    <div class="tab-content" style="padding-top:25px;">
+                                        {foreach name="vipList" id="item"}
+                                        <div class="tab-pane {if $key==0}active{/if}" id="tab_vip_{$item.level}">
+                                            <form action="{:url('index/vip/submit')}" method="post" role="form">
+                                                <input type="hidden" name="days" value="{$item.defaultprice.days}">
+                                                <input type="hidden" name="level" value="{$item.level}">
+                                                <input type="hidden" name="paytype" value="{$addonConfig.defaultpaytype}">
+                                                {if $item.rightdata}
+                                                <h3>会员权益</h3>
+                                                <div class="row row-rightlist">
+                                                    {foreach name="item.rightdata" id="right"}
+                                                    <div class="col-xs-6 col-sm-4 col-md-3">
+                                                        <div class="media">
+                                                            <div class="media-left">
+                                                                <img src="{$right.image|cdnurl}" class="img-md" alt="">
+                                                            </div>
+                                                            <div class="media-body">
+                                                                <div class="media-heading">{$right.text}</div>
+                                                                <p class="text-muted">{$right.intro}</p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {/foreach}
+                                                </div>
+                                                {/if}
+                                                <h3>开通时长</h3>
+                                                <div class="row row-pricelist">
+                                                    {foreach name="item.pricedata" id="price"}
+                                                    <div class="col-xs-6 col-sm-4 col-md-3">
+                                                        <a href="javascript:" class="price-item {if $price.default}active{/if}" data-days="{$price.days}">
+                                                            <div class="title">{$price.title}</div>
+                                                            <div class="price"><em>￥</em><b>{$price.price}</b></div>
+                                                            <div class="subtext">{$price.subtext}</div>
+                                                        </a>
+                                                    </div>
+                                                    {/foreach}
+                                                </div>
+                                                <h3>支付方式</h3>
+                                                <div class="row row-recharge row-paytype" style="padding:10px 0;">
+                                                    {foreach name="paytypeList" id="paytype"}
+                                                    <div class="col-xs-6 col-sm-4 col-md-3 text-center">
+                                                        <label class="{:$paytype.default?'active':''}" data-value="{$paytype.value}">
+                                                            <img src="__CDN__{$paytype.image}" alt="">
+                                                        </label>
+                                                    </div>
+                                                    {/foreach}
+                                                </div>
+                                                <div class="row row-recharge" style="margin:20px -15px 0 -15px;">
+                                                    <div class="col-xs-6 col-sm-4 col-md-4 col-lg-2">
+                                                        <input type="submit" class="btn btn-info btn-recharge btn-block" value="{:$vipInfo?($item.level>$vipInfo.level?'立即升级':($item.level==$vipInfo.level?'立即续费':'无需操作')):'立即购买'}" {if $vipInfo && $vipInfo.level>$item.level}disabled{/if} />
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        {/foreach}
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                        {if !$vipList}
+                        <p class="text-center">请在后台添加VIP等级</p>
+                        {/if}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

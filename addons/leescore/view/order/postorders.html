@@ -1,0 +1,362 @@
+<style>
+	.score-content {
+		background-color: #f5f5f5;
+	}
+	footer {margin: 0px !important;}
+	.goods-order-address li.active {
+		border-color: #ff6c36;
+	}
+	.bg-default { margin-top:15px;}
+	.padding { padding:5px !important;}
+	.btn-info { background-color: #f39c12 !important}
+	.order-qingdan {
+		background-color: #fff;
+		padding: 15px 15px;
+	}
+	.more .desc { line-height: 25px; font-size: 14px;}
+	.border-left { border-left: 1px dashed #dadada;}
+
+	.fz-14 { font-size: 14px;}
+	@media (max-width: 767px) {
+		.border-left { border-left: 0px dashed #dadada;}
+	}
+</style>
+<div class="container" style="min-height: 1000px">
+	<div class="row">
+		<!-- 面包屑路径导航 -->
+		<ol class="breadcrumb hidden-xs" style="margin-bottom:0px;">
+			<li><a href="{:addon_url('leescore/index/index')}">{:__('store title')}</a></li>
+			<li class="active">{:__('order pay page')}</li>
+		</ol>
+		<!-- 面包屑路径导航 -->	
+		<div class="order-qingdan">
+			<!-- 开启了订单清理 -->
+			{if($config['open_clear'] == 1)}
+			<div class="tips-warning">
+				请于<small class="text-danger">{$order_clear_time|date="Y-m-d H:i:s", ###}</small>前完成支付, 否则订单将会自动关闭。
+			</div>
+			{/if}
+			<form action="" name="postorder" class="postorder" method="post" id="postorder">
+			{:token('__token__', 'sha1')}
+			<!-- 确认订单信息 -->
+				<div class="margin-top">
+					<div class="row">
+						<div class="col-md-7">
+							<div> 
+								<?php 
+									$order_goods = $item->order_goods;
+								?>
+								<h3>{:__('List of goods')}</h3>
+								<br>
+								<div class="goods-box bg-grays padding h5">
+									<ul>
+										{volist name="$order_goods" id="vo"}
+											<li class="hidden-xs padding">
+												<div class="col-sm-3">
+													<img src="{$vo.goods_thumb}" alt="{$vo.goods_name}" class="img-responsive" style="max-width: 150px; max-height: 150px; border-radius: 5px;">
+												</div>
+												<div class="col-sm-9 more">
+													<div class="row">
+														<div class="col-sm-9" style="margin-bottom: 10px;">
+															<div class="h3">
+																{$vo.goods_name}
+															</div>
+														</div>
+														<div class="col-sm-12 desc">
+															
+															数量：x{$vo.buy_num|default="0"}
+															
+														</div>
+														<div class="col-sm-12 desc">
+															积分: {$vo.score|default="0"}{:__('score')}
+														</div>
+														<div class="col-sm-12 desc">
+															价格: {$vo.money|default="0.00"}{:__('money')}
+														</div>
+													</div>
+													
+												</div>
+												
+												<div class="clearfix"></div>
+											</li>
+										{/volist}
+										{volist name="$order_goods" id="vo"}
+											<li class="visible-xs">
+												<div class="col-xs-4">
+													<img src="{$vo.goods_thumb}" alt="{$vo.goods_name}" class="img-responsive" style="width: 60px; max-height: 60px; border-radius: 3px;">
+												</div>
+												<div class="col-xs-8 more"> 
+													{$vo.goods_name} *{$vo.buy_num|default="0"}
+													<br>
+													<br>
+													{$vo.score|default="0"}{:__('score')}
+													<br>
+													<br>
+													{$vo.money|default="0.00"}{:__('money')}
+												</div>
+											</li>
+										{/volist}
+										<div class="clearfix"></div>
+									</ul>
+								</div>
+								<div class="text-right padding">
+									<span class="desc">共计{:__('score')}：{$item.score_total} 积分</span>
+									<br> 
+									<span class="desc">共计余额：{$item.money_total} {:__('money')} </span> 
+									<div class="clearfix"></div>
+									<br>
+									<span>{if($user['score'] < $item.score_total)}{:__('miss point', ($item.score_total - $user['score']))}{/if}</span>
+								</div>
+								<div class="text-danger text-right">注意: 订单支付后不可退换，请您确认需要兑换/购买后再购买。</div>
+								<div class="clearfix"></div>
+								<div class="margin-top">
+									<h4>{:__('order other')}</h4>
+									<textarea name="other" id="other" class="form-control" rows="8"></textarea>
+								</div>	
+								<br>
+								<br>
+
+							</div>
+							{if($item.money_total > 0)}
+								<ul>
+									<li>
+										<ul>
+											<li><h4>支付方式：</h4></li>
+											{if($user['score'] < $item.score_total)}
+												<li class="padding pull-left" style="border:2px #eee solid; border-radius: 4px; background-color: #fff; color: #ccc;">{:__('min score')}</li>
+											{else}
+												<li style="border: #f39c12 solid 1px; padding: 1vw 2vw; display: inline-block;cursor: pointer;" >
+													<i class="fa fa-money"></i> 积分+余额支付
+												</li>
+											{/if}
+										</ul>
+									</li>
+								</ul>
+							{else}
+								<input type="radio" value="score" class="hidden" name="paytype" checked="checked"> 
+							{/if}
+						</div>
+						
+						<div class="col-md-4 col-md-offset-1 border-left">
+							<h3>{:__('address list')} <a href="javascript:;" class="btn btn-sm btn-warning insert-address pull-right insert-address">{:__('add')}{:__('address')}</a></h3>
+							<br>
+							<ul class="goods-order-address">
+								{if(empty($address))}
+									<li>
+										{:__('请添加收件地址...')}
+									</li>
+								{/if}
+								{volist name="address" id="vi"}
+									<li {if($vi.status == 1)}class="margin-bottom item active" {else /}class="margin-bottom item"{/if} data-param="{$vi.id}">
+										<div class="col-sm-10 col-xs-10 padding" style="height: 100%;">
+											<ul>
+												<li class="pull-left text-muted fz-12" style="height: 100%;">
+													<div class="fz-14">
+														{:__('zip code')}：{$vi.zip} {:__('mobile')}：{$vi.mobile}  {:__('consignee')}：{$vi.truename}
+														<br>
+														{:__('address')}：{$vi.country} {$vi.region} {$vi.city} {$vi.address}
+													</div>
+												</li>
+											</ul>
+											<div class="clearfix"></div>
+										</div>
+										<div class="col-xs-2 no-padding">
+											<a href="javascript:;" data-id="{$vi.id}" style="height: 96px; line-height: 85px;" class="btn btn-flat btn-info btn-block edit-btn">{:__('edit')}</a>
+										</div>
+										
+										<div class="clearfix"></div>
+									</li>
+								{/volist}
+								<input type="hidden" value="{$item['id']}" name="oid" id="oid" />
+
+								<input type="hidden" value="" name="address_id" id="address_id" />
+							</ul>
+						</div>	
+					</div>
+				</div>
+			<!-- ./ 确认订单信息 -->
+			</form>
+			<div class="text-center margin-top margin-bottom">
+				<br>
+				<div class="row">
+					<div class="col-sm-7">
+						{if($item['score_total'] <= $user['score'])}
+							<a href="javascript:;"  data-param="{$item.id}" id="order_pay" class="btn btn-lg block-center btn-warning {if($user['score'] < $item.score_total || $user['money'] < $item.money_total)}disabled{/if}">
+								{if($user['score'] < $item.score_total)}{:__('min score')}{else} {if($user['money'] < $item.money_total)}余额不足{else}{:__('支付订单')}{/if}{/if}
+							</a>
+						{/if}
+					</div>
+					
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Layer -->
+<script src="__CDN__/assets/libs/fastadmin-layer/dist/layer.js"></script>
+<script>
+	$(document).ready(function() {
+		var active = $(".goods-order-address .active");
+
+		if(active.length < 1)
+		{
+			$('.goods-order-address .item').eq(0).addClass('active');
+		}
+
+		$("#address_id").val($('.goods-order-address .active').attr("data-param"));
+
+		//支付方式
+/* 		$(".pay").on('click', function() {
+			$("input[type=radio]").removeAttr('checked');
+			$(".pay").removeClass('pay-active');
+			$(this).addClass('pay-active');
+			$(this).children("input[type=radio]").prop("checked","checked");
+		}); */
+		
+		//核对收货地址数量最多10个
+		var bwith = $("body").width();
+		var w = bwith < 768 ? '100%' : '65%';
+		$('.insert-address').on('click', function() {
+			$.ajax({
+				url: '{:addon_url("leescore/address/check")}',
+				type: 'get',
+				dataType: 'json',
+				
+				success: function (result)
+				{
+					if(result >= 10) return false;
+					parent.layer.open({
+						type: 2,
+						title: '{:__("address")}{:__("add")}',
+						cancel: function(){
+							window.location.reload();
+						},
+						shadeClose: true,
+						shade: 0.7,
+						area: [w, w],
+						content: '{:addon_url("leescore/address/add")}' //iframe的url
+					});
+				}
+			});
+		});
+
+		//提交订单
+		$("#order_pay").on('click', function() {
+			var other = $("#other").val();
+			var aurl = "{:addon_url('leescore/order/pay')}";
+			var address = $("#address_id");
+			var paytype = $("input[checked=checked]").val();
+			if(address.length > 0 && address.val() == ''){
+				$("#address_id").focus();
+				layer.msg("{:__('art empty tip')}");
+				return false;
+			}
+			if('{$item["paytype"]}' != '0')
+			{
+				layer.confirm('本次购买将消耗'+ ('{$item["score_total"]}')+"积分, "+ ('{$item["money_total"]}') +"元，是否继续购买？( 购买成功后需等待管理员发货。 )", {
+					title: "消费确认",
+					btn: ['现在支付','不了，我再看看'] //按钮
+				}, function(){
+					$.ajax({
+						url: aurl,
+						type: 'post',
+						dataType: 'json',
+						data: {oid: '{$item["id"]}' ,other: other, address: address.val()},
+
+						success: function(json){
+							if(json.code == true)
+							{
+								layer.confirm(json.msg, {
+									title: '下单成功提示',
+									closeBtn: false,
+									btn: ['{:__("yes")}'] //按钮
+								}, function(){
+									parent.location.href = "{:addon_url('leescore/order/index')}";
+								});
+							}else{
+								layer.alert(json.msg, {
+									icon: 2,
+									skin: 'layer-ext-moon'
+								});
+							}
+						}
+					});
+				}, function(){
+					layer.close();
+				});
+				//$("#postorder").attr("action",aurl);
+				//$("#postorder").submit();
+			}else{
+				layer.confirm('本次购买将消耗'+ ('{$item["score_total"]}')+"积分，是否继续购买？", {
+					title: "消费确认",
+					btn: ['现在支付','不了，我再看看'] //按钮
+				}, function(){
+					$.ajax({
+						url: aurl,
+						type: 'post',
+						dataType: 'json',
+						data: {oid: '{$item["id"]}' ,other: other, address: address.val()},
+
+						success: function(json){
+							if(json.code == true)
+							{
+								layer.confirm(json.msg, {
+									title: '下单成功提示',
+									btn: ['{:__("yes")}','{:__("no")}'] //按钮
+								}, function(){
+									parent.location.href = "{:addon_url('leescore/order/index')}";
+								});
+							}else{
+								layer.alert(json.msg, {
+									icon: 2,
+									skin: 'layer-ext-moon'
+								});
+							}
+						}
+					});
+				}, function(){
+					layer.close();
+				});
+				
+			}
+		});
+
+
+		$('.edit-btn').on('click', function() {
+			var bwith = $("body").width();
+    		var id = $(this).attr('data-id');
+    		var w = bwith < 768 ? '100%' : '100%';
+    		var eurl = '{:addon_url("leescore/address/edit")}';
+    		eurl = eurl + "?id="+ id;
+			parent.layer.open({
+				type: 2,
+				title: '{:__("address")}{:__("edit")}',
+				area: ['70%','90%'],
+				shadeClose: true,
+				cancel: function(){
+					//window.location.reload();
+				},
+				shade: 0.7,
+				//area: [w, w],
+				content: eurl //iframe的url
+			});
+		});
+
+		var defaultAddress = $(".goods-order-address li.active").length;
+		var adds = $(".goods-order-address li.item").length;
+		if(defaultAddress <= 0 && adds > 0)
+		{
+			$(".goods-order-address li.item").eq(0).addClass('active');
+			var addid = $(".goods-order-address li.item").eq(0).attr('data-param');
+			$("#address_id").val(addid);
+		}
+		
+		$('.goods-order-address .item').on('click', function() {
+			$('.goods-order-address .item').removeClass('active');
+			$(this).addClass('active');
+			$("#address_id").val($(this).attr("data-param"));
+		});
+	});
+</script>

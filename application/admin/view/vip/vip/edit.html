@@ -1,0 +1,212 @@
+<style>
+    .fieldlist .selectpicker {
+        width: 100% !important;
+        left: 0 !important;
+    }
+    .fieldlist.table tr td{
+        text-align: center;
+        padding: 8px 2px;
+    }
+    .fieldlist.table tr{
+        padding: 2px 0;
+    }
+    .table .td-img{
+        display:flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .td-img .image-thumb{
+        margin-right: 5px;
+        width:32px;
+        height:32px;
+    }
+    .td-img .image-thumb img{
+        width:100%;
+        height:100%;
+    }
+</style>
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Level')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-level" data-rule="required" class="form-control" name="row[level]" type="number" value="{$row.level|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-name" data-rule="required" class="form-control" name="row[name]" type="text" value="{$row.name|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Label')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-label" class="form-control" name="row[label]" type="text" value="{$row.label|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Intro')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-intro" class="form-control" name="row[intro]" type="text" value="{$row.intro|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Image')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <div class="input-group">
+                <input id="c-image" class="form-control" size="50" name="row[image]" type="text" value="{$row.image|htmlentities}">
+                <div class="input-group-addon no-border no-padding">
+                    <span><button type="button" id="faupload-image" class="btn btn-danger faupload" data-input-id="c-image" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp,image/webp" data-multiple="false" data-preview-id="p-image"><i class="fa fa-upload"></i> {:__('Upload')}</button></span>
+                    <span><button type="button" id="fachoose-image" class="btn btn-primary fachoose" data-input-id="c-image" data-mimetype="image/*" data-multiple="false"><i class="fa fa-list"></i> {:__('Choose')}</button></span>
+                </div>
+                <span class="msg-box n-right" for="c-image"></span>
+            </div>
+            <ul class="row list-inline faupload-preview" id="p-image"></ul>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Icon')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-icon" class="form-control" name="row[icon]" type="text" value="{$row.icon|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Content')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-content" class="form-control editor" rows="5" name="row[content]" cols="50">{$row.content|htmlentities}</textarea>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Pricedata')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <table class="fieldlist table" id="pricetable" data-template="pricedata-tpl" data-tag="tr" data-name="row[pricedata]">
+                <tr>
+                    <td>{:__('标题')}</td>
+                    <td>{:__('天数')}</td>
+                    <td>{:__('价格')}</td>
+                    <td>{:__('描述')}</td>
+                    <td>{:__('单位')}</td>
+                    <td width="50">{:__('默认')}</td>
+                    <td width="88">{:__('操作')}</td>
+                </tr>
+                <tr>
+                    <td colspan="6"></td>
+                    <td>
+                        <a href="javascript:;" class="btn btn-sm btn-success btn-append">
+                            <i class="fa fa-plus"></i>
+                            {:__('Append')}
+                        </a>
+                        <!--请注意 dd和textarea间不能存在其它任何元素，实际开发中textarea应该添加个hidden进行隐藏-->
+                        <textarea name="row[pricedata]" class="form-control hide" cols="30" rows="5">{$row['pricedata']}</textarea>
+                    </td>
+                </tr>
+            </table>
+            <script id="pricedata-tpl" type="text/html">
+                <tr>
+                    <td><input type="text" name="<%=name%>[<%=index%>][title]" class="form-control" value="<%=row.title%>" placeholder="标题"/></td>
+                    <td><input type="text" name="<%=name%>[<%=index%>][days]" class="form-control" value="<%=row.days%>" placeholder="天数" size="10"/></td>
+                    <td><input type="number" name="<%=name%>[<%=index%>][price]" class="form-control" value="<%=row.price%>" placeholder="价格"/></td>
+                    <td><input type="text" name="<%=name%>[<%=index%>][subtext]" class="form-control" value="<%=row.subtext%>" placeholder="描述"/></td>
+                    <td><input type="text" name="<%=name%>[<%=index%>][unit]" class="form-control" value="<%=row.unit%>" placeholder="单位"/></td>
+                    <td>
+                        <select class="form-control selectpicker" name="<%=name%>[<%=index%>][default]">
+                            <option value="0" <%=row.default==0?'selected':''%> >否</option>
+                            <option value="1" <%=row.default==1?'selected':''%> >是</option>
+                        </select>
+                    </td>
+                   <td>
+                        <!--下面的两个按钮务必保留-->
+                        <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                        <span class="btn btn-sm btn-primary btn-dragsort"><i class="fa fa-arrows"></i></span>
+                   </td>
+                </tr>
+            </script>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Rightdata')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <table class="fieldlist table" id="righttable" data-template="rightdata-tpl" data-tag="tr" data-name="row[rightdata]">
+                <tr>
+                    <td>{:__('名称')}</td>
+                    <td width="50%">{:__('介绍')}</td>
+                    <td>{:__('图标')}</td>
+                    <td width="88">{:__('操作')}</td>
+                </tr>
+                <tr>
+                    <td colspan="3"></td>
+                    <td>
+                        <a href="javascript:;" class="btn btn-sm btn-success btn-append">
+                            <i class="fa fa-plus"></i>
+                            {:__('Append')}
+                        </a>
+                        <!--请注意 dd和textarea间不能存在其它任何元素，实际开发中textarea应该添加个hidden进行隐藏-->
+                        <textarea name="row[rightdata]" class="form-control hide" cols="30" rows="5">{$row['rightdata']}</textarea>
+                    </td>
+                </tr>
+            </table>
+            <script id="rightdata-tpl" type="text/html">
+                <tr>
+                    <td><input type="text" name="<%=name%>[<%=index%>][text]" class="form-control" value="<%=row.text%>" placeholder="名称"/></td>
+                    <td><input type="text" name="<%=name%>[<%=index%>][intro]" class="form-control" value="<%=row.intro%>" placeholder="介绍" size="10"/></td>
+                    <td class="td-img">
+                        <div class="image-thumb" id="p-image-<%=index%>" data-template="p-image-tpl">
+                            <img src="<%=row.image ? row.image : '__CDN__/assets/img/blank.gif'%>" />
+                        </div>
+                        <div class="input-group">
+                            <input type="hidden" id="c-image-<%=index%>" name="<%=name%>[<%=index%>][image]" class="form-control" value="<%=row.image%>"/>
+                            <div class="input-group-addon no-border no-padding">
+                                <span>
+                                    <button type="button" id="faupload-image-<%=index%>" class="btn btn-danger faupload"
+                                    data-input-id="c-image-<%=index%>" data-mimetype="image/gif,image/jpeg,image/png,image/jpg,image/bmp,image/webp"
+                                        data-multiple="false" data-preview-id="p-image-<%=index%>"><i class="fa fa-upload"></i>
+                                        {:__('Upload')}</button></span>
+                                <span><button type="button" id="fachoose-image-<%=index%>" class="btn btn-primary fachoose"
+                                        data-input-id="c-image-<%=index%>" data-mimetype="image/*" data-multiple="false"><i
+                                            class="fa fa-list"></i> {:__('Choose')}</button></span>
+                            </div>
+                            <span class="msg-box n-right" for="c-image-<%=index%>"></span>
+                         </div>
+                    </td>
+                   <td>
+                        <!--下面的两个按钮务必保留-->
+                        <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                        <span class="btn btn-sm btn-primary btn-dragsort"><i class="fa fa-arrows"></i></span>
+                   </td>
+                </tr>
+            </script>
+            <script id="p-image-tpl" type="text/html">
+                <a href="<%=fullurl%>" data-url="<%=url%>" target="_blank" class="">
+                    <img src="<%=fullurl%>"/>
+                </a>
+            </script>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sales')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-sales" class="form-control" name="row[sales]" type="number" value="{$row.sales|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Status')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <div class="radio">
+            {foreach name="statusList" item="vo"}
+            <label for="row[status]-{$key}"><input id="row[status]-{$key}" name="row[status]" type="radio" value="{$key}" {in name="key" value="$row.status"}checked{/in} /> {$vo}</label>
+            {/foreach}
+            </div>
+
+        </div>
+    </div>
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+            <button type="reset" class="btn btn-default btn-embossed">{:__('Reset')}</button>
+        </div>
+    </div>
+</form>

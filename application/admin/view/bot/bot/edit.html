@@ -1,0 +1,49 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+    {:token()}
+    <div class="form-group">
+        <div class="col-xs-12 col-sm-12">
+            <div class="alert alert-info-light">
+                <b>温馨提示</b><br>
+                <div  >
+                    <p>访问<a href="https://telegram.me/botfather" target="_blank">https://telegram.me/botfather</a>或Telegram里<a href="tg://resolve?domain=BotFather">联系botfather</a></p>
+                    <p>它会提示你用telegram打开。然后你就打开了botfarther的聊天对话框。输入:<br><a style="color:red;">/newbot</a><br>回车发送，botfarther会反馈
+                        Alright, a new bot. How are we going to call it? Please choose a name for your bot.</p>
+                    <p>输入你要创建的bot名字。例如：<a style="color:red;">david_bot</a>,回车发送</p>
+                    <p>它会反馈
+                        Good. Now let's choose a username for your bot. It must end in bot. Like this, for example: TetrisBot or tetris_bot.</p>
+                    <p>我再输入 例如：<a style="color:red;">DavidBot</a>。这是这个机器人的名字。</p>
+                    <p>它会反馈
+                        Sorry, this username is already taken. Please try something different.</p>
+                    <p>这名字已经被用了。我们换一个即可</p>
+                    <p>当反馈
+                        BotFather, [16.02.17 14:23]
+                        Done! Congratulations on your new bot. You will find it at t.me/Gz_David_Bot. You can now add a description, about section and profile picture for your bot, see /help for a list of commands. By the way, when you've finished creating your cool bot, ping our Bot Support if you want a better username for it. Just make sure the bot is fully operational before you do this.
+
+                        Use this token to access the HTTP API:
+                        <a style="color:red;">xxx:xxx（此处为您的Token，复制它）</a>时为正常，如果更换密钥请重新执行2、3步骤即可！</p>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Token')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-token" class="form-control" name="row[token]" type="text" value="{$row.token|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Bot_name')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-bot_name" class="form-control" name="row[bot_name]" type="text" value="{$row.bot_name|htmlentities}">
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>

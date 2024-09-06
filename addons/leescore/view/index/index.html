@@ -1,0 +1,450 @@
+<!-- Content  -->
+<?php
+	//统计精彩活动数量
+	$len = count($activity, true);
+?>
+<style>
+	.topmargin-big {margin-top: 50px;}
+</style>
+	<div class="banner-bg">
+		<div id="slider" class="carousel slide" data-ride="carousel">
+			<!-- Indicators -->
+			<ol class="carousel-indicators">
+				{volist name="slider" id="vo"}
+					<li data-target="#slider" data-slide-to="{$i-1}"></li>
+				{/volist}
+			</ol>
+			<!-- Wrapper for slides -->
+			<div class="carousel-inner" role="listbox">
+				{volist name="slider" id="vo"}
+					<div class="item item-pc">
+						<a class="hidden-xs" href="{$vo.path_url|default='javascript:;'}" {if condition="$vo.open_mode eq 1"}target="_blank" {/if}>
+							<img class="img-silde banner-silde" src="__CDN__{$vo.thumb}" />
+						</a>
+						<a class="visible-xs" href="{$vo.path_url|default='javascript:;'}" {if condition="$vo.open_mode eq 1"}target="_blank" {/if}>
+							{if(!empty($vo['path']))}
+								<img class="img-silde banner-silde img-responsive" src="__CDN__{$vo.path}" />
+							{else /} 
+								<img class="img-silde banner-silde img-responsive" src="__CDN__{$vo.thumb}" />
+							{/if}
+						</a>
+					</div>
+				{/volist}
+			</div>
+			<!-- Controls -->
+			<div class="container index-nav-box wow hidden-xs">
+				<div class="index-nav-list">
+					<div class="index-nav-category">
+						<i class="fa fa-th-large"></i> {:__('商品分类')}
+					</div>
+
+					<div class="index-category-box">
+						{if($cate)}
+							{volist name='cate' id="vo" key="n"}
+							<div class="category-header"><a href="{:addon_url('leescore/goods/index',array('cateType' => $vo['id']))}">{$vo.name}</a></div>
+								<div class="index-category-content">
+									<ul>
+										{if($vo['navs'])}
+											{volist name="vo['navs']" id="v"}
+												<li class="item">
+													<a href="{:addon_url('leescore/goods/index',array('cateType' => $v['id']))}">{$v.name}</a>
+												</li>
+											{/volist}
+										{/if}
+										<div class="clearfix"></div>
+									</ul>
+								</div>
+							{/volist}
+						{/if}
+						<div class="nav-more">
+							<a href="{:addon_url('leescore/goods/index')}"> 更多分类 <i class="fa fa-angle-double-right"></i></a>
+						</div>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+		
+		<div class="container page-content">
+			<div class="m-cate visible-xs margin-top">
+				<ul>
+					{volist name="mobile_cate" id="vo"}
+						<a href="{:addon_url('leescore/goods', ['cateType' => $vo['id']])}">
+							<li class="m-cate-item">
+								<img src="__CDN__{$vo['path']}" alt="{$vo.name}" class="img-responsive center-block img-circle">
+								<h3 class="text-center">{$vo.name}</h3>
+							</li>
+						</a>
+					{/volist}
+				</ul>
+			</div>
+		<br>
+		<br>
+		<div class="clearfix"></div>
+			{notempty name="hotList"}
+			<div class="m-products-box visible-xs margin-top">
+				<!-- 热门商品 -->
+				<div class="row">
+					<div class="col-md-12 col-xs-12">
+						<div class="recommend-header wow fadeInRightBig" data-wow-duraction="1s">
+							<div class="text-center new-product-tab" >
+								<ul>
+									<li class="item active" data-index="0">{:__('hot goods')}</li>
+									<li class="item" data-index="1">{:__('new product')}</li>
+									<li class="item" data-index="2">{:__('recommend')}</li>
+									<div class="clearfix"></div>
+								</ul>
+							</div>
+						</div>
+
+						<!-- 热门推荐 Start-->
+						<div class="product-tab-box wow fadeInUp">
+							<div class="row tab-content">
+								{volist name="hotList" id="vo"}
+									<div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+										<div class="text-center index-goods-box">
+											<figure class="image-box">
+												<img src="__CDN__{$vo.thumb}" class="center-block img-responsive">
+											</figure>
+											<div class="product-content">
+												<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="text-center" style="display:block; font-weight: 700;">
+													{$vo.name}
+												</a>
+												<span>
+													
+													{if($vo['money'] > 0 && $vo['scoreprice'] > 0)}
+														{$vo.scoreprice} <small>积分</small> + {$vo.money} <small>元</small>
+													{elseif($vo['money'] <= 0 && $vo['scoreprice'] <= 0)}
+														<span class="label label-success">免费</span>
+													{elseif($vo['money'] > 0 && $vo['scoreprice'] <= 0)}
+														{$vo.money} <small>元</small>
+													{else /}
+														{$vo.scoreprice} <small>积分</small>
+													{/if}
+												</span>
+											</div>
+											<div class="clearfix topmargin-sm">
+												<a href="javascript:;" data-paramid="{$vo.id}" data-url="{:addon_url('leescore/Cartapi/postCartAdd')}" class="product-btn add-cart btn-xs border-none {if($vo['stock'] < 1)}disabled{/if}"><i class="fa fa-cart-plus"></i> {:__('add cart')}</a>
+												<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="product-btn btn-xs border-none {if($vo['stock'] < 1)}disabled{/if}">{:__('buy')}</a>
+											</div>
+											<div class="clearfix"></div>
+											
+										</div>
+									</div>
+								{/volist}
+							</div>
+							<div class="clearfix"></div>
+							
+						</div>
+						<!-- 热门推荐 End-->
+
+						<!-- 新品上市 Start-->
+						<div class="product-tab-box hide animated">
+							<div class="row tab-content">
+								{volist name="newlist" id="vo"}
+									<div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+										<div class="text-center index-goods-box">
+											<figure class="image-box">
+												<img src="__CDN__{$vo.thumb}" class="center-block img-responsive">
+												<div class="btn-group btn-box">
+													<a href="javascript:;" data-paramid="{$vo.id}" data-url="{:addon_url('leescore/Cartapi/postCartAdd')}" class="product-btn add-cart btn-xs border-none {if($vo['stock'] < 1)}disabled{/if}"><i class="fa fa-cart-plus"></i> {:__('add cart')}</a>
+													<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="product-btn border-none btn-xs {if($vo['stock'] < 1)}disabled{/if}">{:__('buy')}</a>
+												</div>
+											</figure>
+											<div class="product-content">
+												<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="text-center" style="display:block; font-weight: 700;">
+													{$vo.name}
+												</a>
+												<span>
+													
+													{if($vo['money'] > 0 && $vo['scoreprice'] > 0)}
+														{$vo.scoreprice} <small>积分</small> + {$vo.money} <small>元</small>
+													{elseif($vo['money'] <= 0 && $vo['scoreprice'] <= 0)}
+														<span class="label label-success">免费</span>
+													{elseif($vo['money'] > 0 && $vo['scoreprice'] <= 0)}
+														{$vo.money} <small>元</small>
+													{else /}
+														{$vo.scoreprice} <small>积分</small>
+													{/if}
+												</span>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								{/volist}
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					<!-- 新品上市 End-->
+					
+					<!-- 掌柜推荐 Start-->
+						<div class="product-tab-box hide animated">
+							<div class="row tab-content">
+								{volist name="recommend" id="vo"}
+									<div class="col-lg-3 col-md-6 col-sm-6 col-xs-6">
+										<div class="text-center index-goods-box">
+											<figure class="image-box">
+												<img src="__CDN__{$vo.thumb}" class="center-block img-responsive">
+												<div class="btn-group btn-box">
+													<a href="javascript:;" data-paramid="{$vo.id}" data-url="{:addon_url('leescore/Cartapi/postCartAdd')}" class="product-btn add-cart btn-xs border-none {if($vo['stock'] < 1)}disabled{/if}"><i class="fa fa-cart-plus"></i> {:__('add cart')}</a>
+													<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="product-btn border-none btn-xs {if($vo['stock'] < 1)}disabled{/if}">{:__('buy')}</a>
+												</div>
+											</figure>
+											<div class="product-content">
+												<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="text-center" style="display:block; font-weight: 700;">
+													{$vo.name}
+												</a>
+												<span>
+													
+													{if($vo['money'] > 0 && $vo['scoreprice'] > 0)}
+														{$vo.scoreprice} <small>积分</small> + {$vo.money} <small>元</small>
+													{elseif($vo['money'] <= 0 && $vo['scoreprice'] <= 0)}
+														<span class="label label-success">免费</span>
+													{elseif($vo['money'] > 0 && $vo['scoreprice'] <= 0)}
+														{$vo.money} <small>元</small>
+													{else /}
+														{$vo.scoreprice} <small>积分</small>
+													{/if}
+												</span>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								{/volist}
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					<!-- 掌柜推荐 End-->
+						<div class="product-more text-center topmargin-big">
+							<a href="{:addon_url('leescore/goods')}"> 全部产品 <i class="fa fa-angle-double-right"></i></a>
+						</div>
+					</div>
+				</div>
+				<!-- ./ 热门商品 -->
+			</div>
+			<div class="products-box hidden-xs">
+				<!-- 热门商品 -->
+				<div class="row">
+					<div class="col-md-12 col-xs-12">
+						<div class="recommend-header wow fadeInRightBig" data-wow-duraction="1s">
+							<div class="text-center new-product-tab" >
+								<ul>
+									<li class="item active" data-index="3">{:__('hot goods')}</li>
+									<li class="item" data-index="4">{:__('new product')}</li>
+									<li class="item" data-index="5">{:__('recommend')}</li>
+									<div class="clearfix"></div>
+								</ul>
+							</div>
+						</div>
+
+						<!-- 热门推荐 Start-->
+						<div class="product-tab-box wow fadeInUp">
+							<div class="row tab-content">
+								{volist name="hotList" id="vo"}
+									<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+										<div class="text-center index-goods-box">
+											<figure class="image-box">
+												<img src="__CDN__{$vo.thumb}" width="270" height="270" class="center-block">
+												<div class="btn-group btn-box">
+													<a href="javascript:;" data-paramid="{$vo.id}" data-url="{:addon_url('leescore/Cartapi/postCartAdd')}" class="product-btn add-cart btn-xs border-none {if($vo['stock'] < 1)}disabled{/if}"><i class="fa fa-cart-plus"></i> {:__('add cart')}</a>
+													<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="product-btn border-none btn-xs {if($vo['stock'] < 1)}disabled{/if}">{:__('buy')}</a>
+												</div>
+											</figure>
+											<div class="product-content">
+												<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="product-title text-center">
+													{$vo.name}
+												</a>
+												<span class="product-price">
+													价格：
+													{if($vo['money'] > 0 && $vo['scoreprice'] > 0)}
+														{$vo.scoreprice} <small>积分</small> + {$vo.money} <small>元</small>
+													{elseif($vo['money'] <= 0 && $vo['scoreprice'] <= 0)}
+														<span class="label label-success">免费</span>
+													{elseif($vo['money'] > 0 && $vo['scoreprice'] <= 0)}
+														{$vo.money} <small>元</small>
+													{else /}
+														{$vo.scoreprice} <small>积分</small>
+													{/if}
+												</span>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								{/volist}
+							</div>
+							<div class="clearfix"></div>
+							
+						</div>
+						<!-- 热门推荐 End-->
+
+						<!-- 新品上市 Start-->
+						<div class="product-tab-box hide animated">
+							<div class="row tab-content">
+								{volist name="newlist" id="vo"}
+									<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+										<div class="text-center index-goods-box">
+											<figure class="image-box">
+												<img src="__CDN__{$vo.thumb}" width="270" height="270" class="center-block">
+												<div class="btn-group btn-box">
+													<a href="javascript:;" data-paramid="{$vo.id}" data-url="{:addon_url('leescore/Cartapi/postCartAdd')}" class="product-btn add-cart btn-xs border-none {if($vo['stock'] < 1)}disabled{/if}"><i class="fa fa-cart-plus"></i> {:__('add cart')}</a>
+													<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="product-btn border-none btn-xs {if($vo['stock'] < 1)}disabled{/if}">{:__('buy')}</a>
+												</div>
+											</figure>
+											<div class="product-content">
+												<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="product-title text-center">
+													{$vo.name}
+												</a>
+												<span class="product-price">
+													价格：
+													{if($vo['money'] > 0 && $vo['scoreprice'] > 0)}
+														{$vo.scoreprice} <small>积分</small> + {$vo.money} <small>元</small>
+													{elseif($vo['money'] <= 0 && $vo['scoreprice'] <= 0)}
+														<span class="label label-success">免费</span>
+													{elseif($vo['money'] > 0 && $vo['scoreprice'] <= 0)}
+														{$vo.money} <small>元</small>
+													{else /}
+														{$vo.scoreprice} <small>积分</small>
+													{/if}
+												</span>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								{/volist}
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					<!-- 新品上市 End-->
+					
+					<!-- 掌柜推荐 Start-->
+						<div class="product-tab-box hide animated">
+							<div class="row tab-content">
+								{volist name="recommend" id="vo"}
+									<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+										<div class="text-center index-goods-box">
+											<figure class="image-box">
+												<img src="__CDN__{$vo.thumb}" width="270" height="270" class="center-block">
+												<div class="btn-group btn-box">
+													<a href="javascript:;" data-paramid="{$vo.id}" data-url="{:addon_url('leescore/Cartapi/postCartAdd')}" class="product-btn add-cart btn-xs border-none {if($vo['stock'] < 1)}disabled{/if}"><i class="fa fa-cart-plus"></i> {:__('add cart')}</a>
+													<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="product-btn border-none btn-xs {if($vo['stock'] < 1)}disabled{/if}">{:__('buy')}</a>
+												</div>
+											</figure>
+											<div class="product-content">
+												<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" class="product-title text-center">
+													{$vo.name}
+												</a>
+												<span class="product-price">
+													价格：
+													{if($vo['money'] > 0 && $vo['scoreprice'] > 0)}
+														{$vo.scoreprice} <small>积分</small> + {$vo.money} <small>元</small>
+													{elseif($vo['money'] <= 0 && $vo['scoreprice'] <= 0)}
+														<span class="label label-success">免费</span>
+													{elseif($vo['money'] > 0 && $vo['scoreprice'] <= 0)}
+														{$vo.money} <small>元</small>
+													{else /}
+														{$vo.scoreprice} <small>积分</small>
+													{/if}
+												</span>
+											</div>
+											<div class="clearfix"></div>
+										</div>
+									</div>
+								{/volist}
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					<!-- 掌柜推荐 End-->
+					</div>
+				</div>
+				<!-- ./ 热门商品 -->
+				{/notempty}
+				<div class="clearfix"></div>
+				<div class="product-more text-center topmargin">
+					<a href="{:addon_url('leescore/goods')}"> 全部产品 <i class="fa fa-angle-double-right"></i></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	<br>
+	<br>
+<!-- Content  -->
+	</div>
+<!-- Layer -->
+
+<script>
+	$(document).ready(function() {
+		$(".item-pc").eq(0).addClass('active');
+		$(".item-mobile").eq(0).addClass('active');
+		$("ol.carousel-indicators li").eq(0).addClass('active');
+		$(".score-activicy").eq(0).addClass('active');
+		$(".recommend-li").last().removeClass('recommend-li');
+		$(".item-mobile").eq(0).addClass('active');
+		$(".score-activicy-mobile").eq(0).addClass('active');
+		$('.divider').last().remove();
+
+		// $('body').on('mouseenter', ".image-box img", function(){
+		// 	$(".btn-box").stop(false, true);
+		// 	$(".image-box img").next(".btn-box").css({
+		// 		top: "150%"
+		// 	});
+		// 	$(this).next(".btn-box").animate({
+		// 		top: "0%"
+		// 	},350);
+			
+		// });
+		// $('body').on('mouseleave', ".btn-box", function(){
+		// 	$(".btn-box").stop(false, true);
+		// 	$(this).animate({
+		// 		top: "150%"
+		// 	},200);
+		// });
+
+		$(".new-product-tab .item").on("click", function(){
+			$(".product-tab-box").addClass("hide");
+			$(".new-product-tab .item").removeClass("active");
+			var index = $(this).attr("data-index");
+			console.log($(".product-tab-box").length);
+			// alert(index);
+			$(".product-tab-box").eq(index).removeClass('hide');
+			$(this).addClass('active');
+			$(".product-tab-box").eq(index).addClass("wow");
+			$(".product-tab-box").eq(index).addClass("fadeInUp");
+		});
+	});
+
+	$(".lezuan").on('click', function() {
+		layer.msg("暂未开放积分收益渠道，仅能通过安装签到插件获取积分。");
+	});
+
+	function opening()
+	{
+		layer.msg("{:__('opening tips')}");
+	}
+	/* 幻灯滑块鼠标左右拖动触发滚动 */
+	$("#slider").swipe({
+		swipeLeft:function(){
+			$(this).carousel('next');
+		},
+		swipeRight:function(){
+			$(this).carousel('prev');
+		}
+	});
+	/* 幻灯滑块鼠标左右拖动触发滚动 Mobile*/
+	$("#slider-mobile").swipe({
+		swipeLeft:function(){
+			$(this).carousel('next');
+		},
+		swipeRight:function(){
+			$(this).carousel('prev');
+		}
+	});
+	/* 竞猜活动鼠标左右拖动触发滚动 Mobile*/
+	$("#activicy-mobile").swipe({
+		swipeLeft:function(){
+			$(this).carousel('next');
+		},
+		swipeRight:function(){
+			$(this).carousel('prev');
+		}
+	});
+</script>

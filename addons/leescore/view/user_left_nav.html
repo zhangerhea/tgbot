@@ -1,0 +1,16 @@
+<ul class="list-group">
+    <li class="list-group-heading">{:__('地址管理')}</li>
+    <li {if condition="input('?get.listType') AND input('get.listType') eq 'address'"}class="list-group-item active" {else /}class="list-group-item"{/if}> <a href="{:addon_url('leescore/address/index',array('listType' => 'address'))}"><i class="fa fa-map-marker fa-fw"></i> {:__('所有地址')}</a> </li>
+    <!-- 购物车 -->
+        <li class="list-group-heading">{:__('购物车')}</li>
+        <li {if condition="input('?get.listType') AND input('get.listType') eq 'cart'"}class="list-group-item active" {else /}class="list-group-item"{/if}> <a href="{:addon_url('leescore/cart/index',array('listType' => 'cart'))}"><i class="fa fa-cart-arrow-down fa-fw"></i> {:__('我的购物车')}</a> </li>
+    <!-- ./ 购物车 -->
+    <br>
+    <li class="list-group-heading">{:__('订单管理')} </li>
+    <li {if condition="input('?get.listType') AND input('get.listType') eq ''"}class="list-group-item active" {else /}class="list-group-item"{/if}> <a href="{:addon_url('leescore/order/index',array('listType' => ''))}"><i class="fa fa-user-circle fa-fw"></i> {:__('所有订单')}</a> </li>
+    <li {if condition="input('?get.listType') AND input('get.listType') eq '0'"}class="list-group-item active" {else /}class="list-group-item"{/if}> <a href="{:addon_url('leescore/order/index',array('listType' => 0))}"><i class="fa fa-user-o fa-fw"></i>  {:__('未支付')}</a> </li>
+    <li {if condition="input('?get.listType') AND input('get.listType') eq '1'"}class="list-group-item active" {else /}class="list-group-item"{/if}> <a href="{:addon_url('leescore/order/index',array('listType' => 1))}"><i class="fa fa-user-o fa-fw"></i>  {:__('已支付')}</a> </li>
+    <li {if condition="input('?get.listType') AND input('get.listType') eq '2'"}class="list-group-item active" {else /}class="list-group-item"{/if}> <a href="{:addon_url('leescore/order/index',array('listType' => 2))}"><i class="fa fa-key fa-fw"></i> {:__('待签收')}</a> </li>
+    <li {if condition="input('?get.listType') AND input('get.listType') eq '3'"}class="list-group-item active" {else /}class="list-group-item"{/if}> <a href="{:addon_url('leescore/order/index',array('listType' => 3))}"><i class="fa fa-sign-out fa-fw"></i> {:__('已签收')}</a> </li>
+    <li {if condition="input('?get.listType') AND input('get.listType') eq '-2'"}class="list-group-item active" {else /}class="list-group-item"{/if}> <a href="{:addon_url('leescore/order/index',array('listType' => -2))}"><i class="fa fa-sign-out fa-fw"></i> {:__('被退回订单')}</a> </li>
+</ul>

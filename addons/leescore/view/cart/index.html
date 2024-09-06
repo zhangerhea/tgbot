@@ -1,0 +1,365 @@
+<!-- iCheck -->
+<script src="__CDN__/assets/addons/leescore/plugin/icheck-1.0.3/icheck.min.js"></script>
+<link rel="stylesheet" href="__CDN__/assets/addons/leescore/plugin/icheck-1.0.3/skins/all.css">
+<style>
+	.number-btn {
+		display:inline-block; width:23px; height:23px; line-height:23px; text-align: center; border: 1px solid #ccc; float: left;
+	}
+</style>
+<!-- ./ iCheck -->
+<div class="container padding page-content">
+	<div class="row">
+    	<div class="col-md-3 col-xs-12">
+			{include file="common/user-nav"}
+		</div>
+		<div class="col-md-9 col-xs-12">
+			
+			<div class="layout-right">
+				<!-- 面包屑路径导航 -->
+				<ol class="breadcrumb">
+					<li><a href="{:addon_url('leescore/index/index')}">{:__('store title')}</a></li>
+					<li class="active">{:__('my cart')}</li>
+				</ol>
+				<!-- 面包屑路径导航 -->
+					<div class="box radius-none">
+						<div class="box-header">
+							<h3 class="box-title hidden-xs">{:__('my cart')}</h3>
+							<div class="visible-xs"><br /></div>
+						</div>
+						<!-- /.box-header -->
+
+						<form action="{:addon_url('leescore/order/createOrder')}" method="post" name="payForm" id="payForm">
+							<div class="box-body table-responsive no-padding">
+								<table class="table table-responsive no-margin">
+									<tbody>
+										<tr class="active">
+											<th width="40px;"><input type="checkbox" name="all" class="all checkbox" /></th>
+											<th class="hidden-xs">图片</th>
+											<th colspan="1">{:__('goods name')}</th>
+											<th>{:__('buy num')}</th>
+											<th>{:__("price")}</th>
+											
+										</tr>
+										{if($list->isEmpty())}
+											<tr>
+												<td colspan="6">{:__('购物车还没有收藏的产品哦~')}</td>
+											</tr>
+										{/if}
+										
+										{volist name="list" id="vo"}
+											<tr class="form">
+												<td><input type="checkbox" name="ids[]" value="{$vo.id}" class="checkbox ids"></td>
+												<td class="hidden-xs"><a href="{:addon_url('leescore/goods/details',array('gid' => $vo.goods_detail.id))}"><img src="{$vo.goods_detail.thumb}" class="img-responsive" style="height: 60px; width: 60px;" /></a></td>
+												<td>{$vo.goods_detail.name}</td>
+												<td style="width: 120px;">
+													<a class="number-btn number-btn-dec" data-action="dec" href="javascript:;">-</a>
+													<input data-price="{$vo.goods_detail.scoreprice}" data-money="{$vo.goods_detail.money}" type="number" data-id="{$vo.id}" name="number_{$vo.id}" style="width: 40px; height:23px; text-align: center; line-height:23px; float: left; padding: 0 3px;" class="form-control number cart-price" max="99999" readonly min="1" value="{$vo.number|default=1}" maxlength="5">
+													<a class="number-btn number-btn-inc" data-action="inc" data-goodsid="{$vo.goods_id}" href="javascript:;">+</a>
+												</td>
+												<td>
+													{if($vo.goods_detail.scoreprice gt 0)}
+														<span class="text-orange"><span class="glyphicon glyphicon-piggy-bank"></span> {$vo.goods_detail.scoreprice}</span>
+													{/if}
+													{if($vo.goods_detail.money gt 0)}
+														<span class="text-danger pull-right"><span class="text-danger"> <i class="glyphicon glyphicon-yen"></i>  {$vo.goods_detail.money}</span>
+													{/if}
+												</td>
+												
+											</tr>
+										{/volist}
+											<tr>
+												<td class="bg-grays" colspan="7">
+													<div class="col-sm-4 padding-none">
+														
+														<a href="javascript:;" class="btn btn-danger del-selected">{:__('delete selected')}</a>
+													</div>
+													<div class="col-sm-3 col-sm-offset-3">
+														{:__('score')}: <span class="score glyphicon glyphicon-piggy-bank text-orange">&nbsp;0</span>
+														<br>
+														{:__('price')}: <span class="money glyphicon glyphicon-yen text-danger">&nbsp;0</span> {:__('money')}
+													</div>
+													<div class="col-sm-2">
+														<a href="javascript:;" class="btn btn-danger btn pull-right gotopay">{:__('buy')}</a>
+													</div>
+												</td>
+											</tr>
+									</tbody>
+								</table>
+							</div>
+							<!-- /.box-body -->
+							{if($list->render() != null)}
+								<div class="box-footer clearfix text-center">
+									{$list->render()}
+								</div>
+							{/if}
+						</div>
+					</form>
+				</div>
+
+				<div class="goods-list">
+
+				</div>
+				<div class="col-sm-12 padding text-center page">
+					
+				</div>
+			</div>
+
+		</div>
+	</div>
+</div>
+
+<!-- Layer -->
+<script src="__CDN__/assets/libs/fastadmin-layer/dist/layer.js"></script>
+<script>
+	$(document).ready(function() {
+		$("body").on('change',".cart-price", function() {
+			var tscore = 0;
+			var tmoney = 0;
+			$('input.ids').each(function(index, el) {
+				if($(this).prop('checked'))
+				{
+					//console.log(index);
+					var number = $("input[data-id="+$(this).val()+"]").val();
+					//console.log(number);
+					var price = $("input[data-id="+$(this).val()+"]").attr("data-price");
+					var money = $("input[data-id="+$(this).val()+"]").attr("data-money");
+					tscore = tscore + (number * price);
+					tmoney = tmoney + (number * money);
+				}
+			});
+			var number = number == undefined ? $(this).val() : number;
+			var price = price == undefined ? $(this).attr("data-price") : price;
+			var money = money == undefined ? $(this).attr("data-money") : money;
+
+			$(".score").html("&nbsp;"+tscore);
+			$(".money").html("&nbsp;"+tmoney);
+		});
+
+
+		$(".number-btn").on("click", function(){
+			let ac = $(this).attr("data-action");
+			
+			if(ac == 'dec')
+			{
+				var numbers = $(this).next("input").val();
+				if(numbers > 1){
+					$(this).next("input").val(numbers-1);
+				}else{
+					return false;
+				}
+			}else{
+				var num = $(this).prev("input").val();
+				var goodsid = $(this).attr('data-goodsid');
+				let vm = $(this).prev("input");
+				$.ajax({
+					type: "post",
+					url: "{:addon_url('leescore/Cartapi/incGoodsNumber')}",
+					data: {numbers:num, gid: goodsid},
+					dataType: "json",
+					success: (res) => {
+						if(res.status == true){
+							vm.val(res.num);
+						}else{
+							layer.msg(res.msg, {
+								icon: 5
+							});
+						}
+					}
+				});
+			}
+		});
+
+		$("body").on("blur", ".cart-price", function(){
+			$('input.cart-price').each(function(index, el) {
+				if($(this).val() < 1){
+					$(this).val("1");
+				}
+				
+			});
+		});
+		//结算付款
+		$(".gotopay").on('click', function() {
+			var empty = true;
+			$('input.ids').each(function(index, el) {
+				if($(this).prop('checked'))
+				{
+					empty = false;
+					return false;
+				}
+			});
+
+			if(empty)
+			{
+				layer.msg("{:__('select empty')}",{'icon': 5});
+				return false;
+			}else{
+				let data = $("#payForm").serialize();
+				$.ajax({
+					type: "post",
+					url: "{:addon_url('leescore/Cartapi/checkGoodsNumber')}",
+					data: data,
+					dataType: "json",
+					success: (res)  => {
+						if(res.code == false){
+							layer.msg(res.msg,{'icon': 5});
+							return false;
+						}else{
+							$("#payForm").submit();
+						}
+					}
+				});
+			}
+		});
+
+		$('input').iCheck({
+			checkboxClass: 'icheckbox_minimal-orange',
+			radioClass: 'iradio_minimal',
+			increaseArea: '10%' // optional
+		});
+
+		$("input.ids").on('ifChanged', function() {
+			var utscore = 0;
+			var utmoney = 0;
+			//console.log($('input.ids').length); //长度正常
+			$('input.ids').each(function(index, el) {
+				if($(this).prop('checked'))
+				{
+					var number = $("input[data-id="+$(this).val()+"]").val();
+					var price = $("input[data-id="+$(this).val()+"]").attr("data-price");
+					var money = $("input[data-id="+$(this).val()+"]").attr("data-money");
+					utscore = utscore + (number * price);
+					utmoney = utmoney + (number * money);
+				}
+			});
+
+			utmoney = parseFloat(utmoney).toFixed(2);
+
+			$(".score").html("&nbsp;"+utscore);
+			$(".money").html("&nbsp;"+utmoney);
+		});
+
+		//全选
+		$('input.all').on('ifChecked', function(){
+			$('input.ids,input.all').iCheck('check');
+		});
+
+		//取消全选
+		$('input.all').on('ifUnchecked', function(){
+			$('input.ids,input.all').iCheck('uncheck');
+		});
+
+		//删除订单
+		$(".order-delete").on('click', function() {
+			var id = $(this).attr("data-param");
+			$.ajax({
+				url: '{:addon_url("leescore/order/delone")}',
+				type: 'get',
+				dataType: 'json',
+				data: {id: id},
+
+				success:  function (json)
+				{
+					if(json.status == true)
+					{
+						layer.msg('{:__("delete success")}',{
+							icon: 6
+						});
+						setTimeout(function() {
+							window.location.reload();
+						}, 2000);
+					}else{
+						layer.msg('{:__("delete faild param error")}',{
+							icon: 2
+						});
+					}
+				}
+			});
+		});
+
+		//关闭订单
+		$(".close-order").on('click', function() {
+			var id = $(this).attr("data-param");
+
+			$.ajax({
+				url: '{:addon_url("leescore/order/closeOrder")}',
+				type: 'get',
+				dataType: 'json',
+				data: {id: id},
+				success: function (json)
+				{
+					//console.log(json);
+					if(json.status == true)
+					{
+						layer.msg('{:__("order close success")}',{
+							icon: 6
+						});
+						setTimeout(function() {
+							window.location.reload();
+						}, 2000);
+					}else{
+						layer.msg('{:__("order close faild param error")}',{
+							icon: 2
+						});
+						console.log(json.msg);
+					}
+				}
+			});
+		});
+
+		//删除选中订单
+		$(".del-selected").on('click', function() {
+			var empty = true;
+
+			//检查选中状态
+			$(".ids").each(function(index, el) {
+				if($(this).prop("checked") == true)
+				{
+					empty = false;
+				}
+			});
+
+			//没有被选中的订单
+			if(empty == true){
+				layer.msg('{:__("please selected goods")}',{icon: 7});
+				return false;
+			} 
+
+			layer.confirm("{:__('delete cart tips')}",{
+				btn: ['{:__("yes i am delete")}','{:__("click error")}'],
+				title: '{:__("action title tips")}',
+			}, function(){
+				//序列化选中ID
+				var ids = $(".ids").serialize();
+				$.ajax({
+					url: '{:addon_url("leescore/cart/delete")}'+"?"+ids,
+					type: 'post',
+					dataType: 'json',
+					data: {data: ids},
+
+					success: function (json)
+					{
+						if(json.status == true)
+						{
+							layer.msg('{:__("delete success")}', {
+								icon: 6
+							});
+							setTimeout(function(){
+								window.location.reload();
+							}, 2000);
+						}else{
+							layer.msg('{:__("delete faild param error")}', {
+								icon: 2
+							});
+						}
+					}
+				})
+				.fail(function() {
+					console.log("Ajax请求发生错误");
+				});
+			},function(){
+				layer.close();
+			});			
+			return false;
+		});
+	});
+</script>

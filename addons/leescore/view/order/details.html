@@ -1,0 +1,119 @@
+{include file="common/meta" /}
+{include file="common/script" /}
+<div class="container-fluid margin padding">
+	<div class="row">
+
+		<!-- 订单信息 -->
+		<div class="col-md-10 col-md-offset-1 col-xs-12">
+			<div class="box radius-none">
+				<div class="box-header with-border">
+					{:__('order_id')}：{$vo.order_id}
+				</div>
+				<div class="box-body">
+					<div class="col-md-12 padding bg-gray">
+						{volist name="$vo->order_goods" id="v"}
+							<li style="margin-bottom:10px;">
+								<div class="col-xs-4">
+									<img src="{$v.goods_thumb}" alt="{$v.goods_name}" class="img-responsive" style="border-radius: 3px;">
+								</div>
+								<div class="col-xs-8 more"> 
+									{$v.goods_name} *{$v.buy_num|default="0"}
+									<br>
+									<br>
+									{$v.score|default="0"}{:__('score')}
+									<br>
+									<br>
+									{$v.money|default="0.00"}{:__('money')}
+								</div>
+								<div class="clearfix"></div>
+							</li>
+						{/volist}
+					</div>
+
+					<div class="col-md-6 padding">
+						{:__('score')}: <span class="text-warning">{$vo.score_total|default="0"}</span>
+					</div>
+					<div class="col-md-6 padding">
+						{:__('price')}: <span class="text-warning">￥{$vo.money_total|default="0"}</span>
+					</div>
+					<div class="col-md-6 padding">
+						{:__('order status')}: 
+						{switch name="vo.status"}
+							{case value="-2"} <span class="label label-danger">{:__('admin faild')}</span> {/case}
+							{case value="0"} <span class="label label-default">{:__('unpaid')}</span> {/case}
+							{case value="1"} <span class="label label-success">{:__('paid')}</span> {/case}
+							{case value="2"} <span class="label label-info">{:__('shipped')}</span> {/case}
+							{case value="3"} <span class="label label-primary">{:__('sign for')}</span> {/case}
+							{case value="4"} <span class="label label-warning">{:__('outing')}</span> {/case}
+							{case value="5"} <span class="label label-danger">{:__('out success')}</span> {/case}
+							{default /} {:__('order error')}
+						{/switch}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('pay time')}: {$vo.paytime}
+					</div>
+					<div class="col-md-6 padding">
+						{:__('pay type')}: 余额{:__('pay text')}
+					</div>
+					<div class="col-md-12 padding">
+						{:__('order other')}: {$vo.other}
+						<p></p>
+					</div>
+					<div class="col-md-12 padding">
+						<fieldset>
+							<legend><h3>{:__('consignee user info')}</h3></legend>
+							<div class="col-md-6 padding">
+								{:__('姓名')}: {$vo.addressInfo.truename}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('province / city / xian')}: {$vo.addressInfo.region}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('zip code')}: {$vo.addressInfo.zip}
+							</div>
+							<div class="col-md-6 padding">
+								{:__('mobile')}: {$vo.addressInfo.mobile}
+							</div>
+							<div class="col-md-12 padding">
+								{:__('detail address')}: {$vo.addressInfo.address}
+							</div>
+						</fieldset>
+						{if($vo.status > 0)}
+						<fieldset>
+							<legend><h3>{:__('replace result info')}</h3></legend>
+							{if($vo.status > 1 || $vo.status == -2)}
+								{if($vo.status != -2)}
+									<div class="col-md-6 padding">
+										{:__('sn_order')}: {$vo.virtual_sn}
+									</div>
+									<div class="col-md-6 padding">
+										{:__('virtual name or wuliu')}: {$vo.virtual_name}
+									</div>
+									<div class="col-md-6 padding">
+										{:__('virtual go time')}: {$vo.virtual_go_time|date='Y-m-d H:i:s',###}
+									</div>
+								{else /}
+									<div class="col-md-12 padding">
+										{$vo.result_other}
+									</div>
+								{/if}
+								{if($vo.status >= 3)}
+									<div class="col-md-6 padding">
+										{:__('virtual sign time')}: {$vo.virtual_sign_time|date='Y-m-d H:i:s',###}
+									</div>
+								{/if}
+							{else /}
+								<div class="alert alert-warning">
+									{:__('Waiting for the administrator to deliver the goods')}...
+								</div>
+							{/if}
+						</fieldset>
+						{/if}
+					</div>
+
+				</div>
+			</div>
+		</div>
+		<!-- 订单信息 -->
+	</div>
+</div>

@@ -1,0 +1,178 @@
+*{margin:0;padding:0}
+li{list-style:none}
+img{vertical-align:top}
+/* 以上可合并 */
+.clear{clear:both}
+.qiandao-banner {
+    text-align: center;
+}
+.clear:after{clear:both;display:table;content:''}
+.qiandao-sprits{background-image:url(../img/qiandao_sprits.png);background-repeat:no-repeat}
+.qiandao-tran{-webkit-transition:all .3s ease-out;-moz-transition:all .3s ease-out;-o-transition:all .3s ease-out;transition:all .3s ease-out;-ms-transition:all .3s ease-out}
+.qiandao-radius{-webkit-border-radius:5px;-moz-border-radius:5px;-o-border-radius:5px;-ms-border-radius:5px}
+.qiandao-warp{background:#4d56a3;}
+.qiandap-box { width: 80%; margin: 0px auto;}
+.qiandao-right{padding:0 10px;}
+.current-date{float:left;padding-top:5px;padding-left:55px;color:#b25d06;font-size:18px}
+.qiandao-history{float:right;width:92px;height:36px;border-radius:4px;background-color:#b25d06;color:#fff;text-align:center;font-size:1pc;line-height:36px;cursor:pointer}
+.qiandao-history:hover{background-color:#9c4f01}
+.qiandao-top{padding-top:70px;height:13pc}
+.just-qiandao{margin:0 auto 20px;width:212px;height:67px;cursor:pointer}
+.just-qiandao.actived,.just-qiandao:active{background-position:0 -68px}
+.qiandao-notic{color:#b25d06;text-align:center;font-size:18px}
+.qiandao-rule-list{margin-bottom:35px;color:#8d8ebb;font-size:1pc;line-height:26px}
+.qiandao-rule-list h4{font-weight:bolder;font-size:1pc}
+.qiandao-main{overflow:hidden;}
+.qiandao-list{margin-top:10px;}
+
+.qiandao-list li { padding: 15px; text-align: center; height: 44px; line-height: 44px; background-color: #fffff1; border-radius: 10px; }
+.qiandao-list li.qiandao .qiandao-icon{display:block}
+.qiandao-layer{position:fixed;top:0;bottom:0;left:0;z-index:888;display:none;width:100%}
+.qiandao-layer-bg{width:100%;height:100%;background-color:#000;opacity:.55;filter:alpha(opacity=55)}
+.qiandao-layer-con{position:absolute;top:50%;left:50%;z-index:999;padding-top:30px;border:3px #33b23f solid;border-radius:5px;background-color:#fff}
+.qiandao-history-layer .qiandao-layer-con{margin:-257px 0 0 -293px;width:586px;height:484px}
+.close-qiandao-layer{position:absolute;top:13px;right:13px;width:1pc;height:1pc;background-position:-228px -51px}
+.qiandao-history-inf{margin-top:25px;color:#666;text-align:center;font-size:14px}
+.qiandao-history-inf li{float:left;width:33%}
+.qiandao-history-inf li h4{color:#33b23f;font-size:40px;line-height:50px}
+.qiandao-history-table{overflow:hidden;margin:20px;-webkit-border-radius:5px 5px 0 0;-moz-border-radius:5px 5px 0 0;border-radius:5px 5px 0 0;-o-border-radius:5px 5px 0 0;-ms-border-radius:5px 5px 0 0}
+.qiandao-history-table table{width:100%;color:#666;text-align:center;font-size:1pc;border-spacing:0}
+.qiandao-history-table table th{width:33.3%;background-color:#f2f2f2;text-align:center;line-height:40px}
+.qiandao-history-table td{width:33.3%;border-bottom:1px #e5e5e5 dashed;line-height:34px}
+.qiandao-active .qiandao-layer-con{margin:0px;width:98%;height:98%; margin-top: 1%;}
+.yiqiandao{margin:36px 0 0 40px;color:#666;font-size:14px;line-height:38px}
+.yiqiandao .yiqiandao-icon{float:left;margin:0 25px;width:178px;height:38px;background-position:-217px 0}
+.qiandao-jiangli{position:relative;margin:45px auto;width:335px;height:170px;background-position:0 -146px}
+.qiandao-jiangli span{position:absolute;top:58px;left:50px;display:block;width:178px;height:106px;color:#ff7300;text-align:center;font-weight:bolder;font-size:30px;line-height:106px}
+.qiandao-jiangli span em{padding-left:5px;font-style:normal;font-size:1pc}
+.qiandao-share{display:block;margin:60px auto 0;width:318px;height:3pc;border-radius:5px;background-color:#4ab854;color:#fff;text-align:center;text-decoration:none;font-size:18px;line-height:3pc}
+.qiandao-share:hover{background-color:#3e9d46}
+.qiandao {
+    background-color: #333;
+    z-index: 11;
+}
+.qiandao-icon {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #9c4f01;
+}
+.qiandao .qiandao-icon {
+    border: 2px solid green;
+    border-radius: 50%;
+    font-size: 18px;
+    color: #9c4f01;
+}
+.qiandao-con {
+    display: flex;
+    width: 100%;
+}
+.day_lists-box {
+    background-color: #ffbd66;
+    padding: 5%;
+    border-radius: 20px;
+    width: 60%;
+    box-sizing: border-box;
+}
+.day-header {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;
+}
+.day-header div {
+    padding: 20px;
+    background-color: #fee684;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.qiandao-top {
+    background-color: #fff6ed;
+    position: relative;
+    border-radius: 10px;
+}
+.qiandao-top::before {
+    content: '每日签到';
+    display: block;
+    height: 50px;
+    line-height: 50px;
+    font-size: 18px;
+    text-align: center;
+    color: #fff;
+    border-radius: 10px 10px 0 0;
+    background-color: #ffbd66;
+    position: absolute;
+    width: 100%;
+    top: 0px;
+    left: 0px;
+}
+
+.qiandao-bottom {
+    background-color: #fff6ed;
+    margin-top: 20px;
+    border-radius: 10px;
+    padding: 20px;
+}
+.qiandao-banner {
+    padding: 8% 0;
+    text-align: center;
+}
+.qiandao-banner h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 4rem;
+}
+.qiandao-banner img {
+    max-width: 100%;
+}
+.qiandao-list {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 1px;    
+}
+.qiandao-list li {
+    background-repeat: no-repeat;
+}
+.qiandao-right {
+    margin-left: 50px;
+}
+.qiandao-con {
+    padding-bottom: 50px;
+}
+@media (max-width: 1000px) {
+    .qiandao-con {
+        flex-direction: column;
+    }
+    .day_lists-box {
+        width: 100%;
+    }
+    .day-header div {
+        padding: 5px;
+    }
+    .qiandap-box {
+        width: 94%;
+    }
+    .qiandao-list li {
+        padding: 5px;
+        height: 30px;
+        line-height: 30px;
+    }
+    .qiandao-history-layer .qiandao-layer-con{margin:0px 0 0 0px;width:100%;height:100%}
+    .qiandao-layer-con {
+        top: 0px;
+        left: 0px;
+        border: 0px;
+    }
+    .qiandao-top {
+        margin-top: 20px;
+    }
+    .qiandao-right {
+        padding: 0px;
+    }
+    .qiandao-bottom {
+        margin-bottom: 100px;
+    }
+    .qiandao-right {
+        margin-left: 0px;
+    }
+}

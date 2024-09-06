@@ -1,0 +1,78 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Bot_id')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input id="c-bot" data-rule="required"  class="form-control " name="row[bot]" readonly type="text" value="{$bot.bot_name}（{$bot.token}）">
+            <input id="c-bot_id" data-rule="required"  type="hidden" class="form-control" name="row[bot_id]" type="text" value="{$row.bot_id|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Keywords')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input id="c-keywords" data-rule="required" class="form-control"  placeholder="Telegram官方限制只能输入英文字母的命令"  name="row[keywords]" type="text" value="{$row.keywords|htmlentities}">
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Sendtype')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <select  id="c-sendtype" class="form-control selectpicker" name="row[sendtype]">
+                <option value="sendMessage" {eq value="sendMessage" name="$row.sendtype"}selected{/eq}>sendMessage</option>
+                <option value="deleteMessage" {eq value="deleteMessage" name="$row.sendtype"}selected{/eq}>deleteMessage</option>
+                <option value="forwardMessage" {eq value="forwardMessage" name="$row.sendtype"}selected{/eq}>forwardMessage</option>
+                <option value="sendPhoto" {eq value="sendPhoto" name="$row.sendtype"}selected{/eq}>sendPhoto</option>
+                <option value="sendChatAction" {eq value="sendChatAction" name="$row.sendtype"}selected{/eq}>sendChatAction</option>
+
+            </select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Reqeust_type')}:</label>
+        <div class="col-xs-12 col-sm-8">
+                        
+            <select  id="c-reqeust_type" class="form-control selectpicker" name="row[reqeust_type]">
+                {foreach name="reqeustTypeList" item="vo"}
+                    <option value="{$key}" {in name="key" value="$row.reqeust_type"}selected{/in}>{$vo}</option>
+                {/foreach}
+            </select>
+            <div class="ke-container ke-container-black" style="width: 100%;">
+                <img src="/assets/img/{$row.reqeust_type}.jpg" id="demo_img" width="100%">
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('Text')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <textarea id="c-text" class="form-control editor-markdown" rows="5" name="row[text]" cols="50">{$row.text|htmlentities}</textarea>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('强制回复')}:</label>
+        <div class="col-xs-12 col-sm-8">
+
+            <input  id="c-isforce" name="row[isforce]" type="hidden" value="{$row.isforce}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-isforce" data-yes="1" data-no="0" >
+                <i class="fa fa-toggle-on text-success {eq name="$row.isforce" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2">{:__('是否引用')}:</label>
+        <div class="col-xs-12 col-sm-8">
+            <input  id="c-isquote" name="row[isquote]" type="hidden" value="{$row.isquote}">
+            <a href="javascript:;" data-toggle="switcher" class="btn-switcher" data-input-id="c-isquote" data-yes="1" data-no="0" >
+                <i class="fa fa-toggle-on text-success {eq name="$row.isquote" value="0"}fa-flip-horizontal text-gray{/eq} fa-2x"></i>
+            </a>
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>

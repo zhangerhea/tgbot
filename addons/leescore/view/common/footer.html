@@ -1,0 +1,324 @@
+
+<div class="clearfix"></div>
+
+<div class="hidden-xs shopping-cart-ps">
+	<div class="cart-ps-icon" data-on="off">
+		<i class="fa fa-shopping-cart"></i>
+	</div>
+	<div class="cart-ps-header">
+		购物车
+	</div>
+	<div class="cart-ps-list">
+		<ul>
+
+		</ul>
+		<br>
+		<div style="position: absolute; z-index: 20; bottom: 5px; left: 10%;">
+			<a href="{:addon_url('leescore/cart/index')}" style="float:left;font-size: 12px; color: #666; height: 20px; display: block; line-height: 18px; text-align: center; width: 80px; margin: 0 auto; border: 1px solid #666;" class="">前往购物车</a>  
+		&nbsp; &nbsp;  <a class="clearCart-btn" data-url="{:addon_url('leescore/Cartapi/PostUserCartDelAll')}" href="javascript:;">清空购物车</a>
+		</div>
+	</div>
+</div>
+
+<div class="cart-fix-box visible-xs">
+	<a href="{:addon_url('leescore/cart/index')}">
+		<div class="cart-fix">
+			<i class="fa fa-cart-plus fa-2x visible-xs"></i> 
+		</div>
+	</a>
+</div>
+
+<div class="hidden-xs">
+	<footer class="foot-leescore clearfix">
+		<div class="container">
+			
+		{volist name="links" id="v"}
+			<div class="links">
+			{if($v['children'] > 0)}
+				
+					<ul>
+					
+						<li>{$v.name}：</li>
+						{volist name="v.children" id="link"}
+							<li><a class="open-dialog" {if(!empty($link["uri"]))}data-link="{$link.uri}"{/if} rel="nofollow" {if($link['target'] != '_dialog')}target="{$link.target}" href="{$link.uri}" {else /} href="javascript:;" data-open="on" {/if}>{$link.title}</a></li>
+						{/volist}
+					
+					</ul>
+					
+			{/if}
+			<div class="clearfix"></div>
+			</div>
+		{/volist}
+				
+				
+			<div class="link-cate-box">
+				<div class="row">
+					{volist name="footer" id="vo"}
+						<div class="col-lg-3">
+							<h2 class="link-header">{$vo.name}</h2>
+							<div style="padding-left: 5px; padding-top: 15px;">
+								<ul>
+									{volist name="vo.children" id="item"}
+										<li>
+											<a {if($item['target'] == '_dialog')}class="open-dialog" data-title="{$item.title}" data-uri="{$item.uri}"{/if} {if(!empty($item['uri']))}data-link="{$item.uri}"{/if} rel="nofollow" {if($item['target'] != '_dialog' && $item['type'] == '2')}target="{$item.target}" href="{$item.uri}" {elseif($item['target'] != '_dialog' && $item['type'] == '1')} href="{:addon_url('leescore/page/detail', ['id' => $item['id']])}" {else /} href="javascript:;" data-open="on" {/if}>{$item.label}</a>
+											{if($item['target'] == '_dialog')}
+												<div class="hide">
+													<div class="content-box" style="padding: 20px;">
+														{$item.content}
+													</div>
+													
+												</div>
+											{/if}
+										</li>
+									{/volist}
+								</ul>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+					{/volist}
+					
+					<div class="clearfix"></div>
+				</div>
+				<div class="clearfix" style="clear: both;"></div>
+			</div>
+			<div class="clearfix"></div>
+			<br>
+			<br>
+			<div class="copyright">
+				<p>Copyright&nbsp;©&nbsp;{$site.name} <?php echo date('Y',time());?>. All Rights Reserved. <a href="http://www.miibeian.gov.cn" target="_blank">{$site.beian}</a></p>
+			</div>
+		</div>
+	</footer>
+</div>
+
+<script>
+	$(document).ready(function () {
+		$(".cart-ps-icon").on('click', function(){
+			var open = $(this).attr("data-on");
+			if(open == 'on')
+			{
+				$(".shopping-cart-ps").animate({"right":"-230px"}, 300);
+				$(this).attr("data-on", 'off');
+			}else{
+				$(".shopping-cart-ps").animate({"right":"0px"}, 300);
+				$(this).attr("data-on", 'on');
+				$.ajax({
+					type: "get",
+					url: "{:addon_url('leescore/cartapi/getUserCartList')}",
+					dataType: "html",
+					success: function (res) {
+						var html = $.parseJSON(res);
+						$(".cart-ps-list ul").html(html);
+					}
+				});
+			}
+		});
+
+		$(document).on('click', ".open-dialog", function(){
+			var uri = $(this).attr('data-uri');
+			var title = $(this).attr('data-title');
+			var content = $(this).next("div").html();
+			layer.open({
+				type: 1,
+				title: title,
+				area: ['100%', '100%'],
+				fixed: true, //不固定
+				maxmin: true,
+				content: content,
+			});
+		});
+
+		$(".cart-ps-list").on('click', '.cart-number-btn', function(){
+			var numbers = Number($(this).parents(".cart-btn-group").children("a").eq(2).html());
+			var ac = $(this).attr("data-action");
+			if(ac == 'dec'){
+				if(numbers > 1)
+				{
+					numbers = numbers -1;
+				}else{
+					var cartid = $(this).attr("data-cartid");
+					var ipt = $(this).parents(".item");
+					ipt.remove();
+					$.ajax({
+						type: "post",
+						url: "{:addon_url('leescore/Cartapi/deleteCartGoods')}",
+						data: {'cartid': cartid},
+						dataType: "json",
+						success: function (res) {
+							if(res.status != 1){
+								layer.msg(res.msg, {
+									icon: 5,
+								})
+							}
+						}
+					});
+					return false;
+				}
+				
+			}else if(ac == 'inc'){
+				numbers += 1;
+			}
+
+			var cartid = $(this).attr("data-cartid");
+			var ipt = $(this).parents(".cart-btn-group").children("a").eq(2);
+			$.ajax({
+				type: "post",
+				url: "{:addon_url('leescore/Cartapi/postCartNumber')}",
+				data: {'cartid': cartid, 'number':numbers, 'ac': ac},
+				dataType: "json",
+				success: function (res) {
+					if(res.status == 1){
+						ipt.html(numbers);
+					}else{
+						layer.msg(res.msg, {
+							icon: 5,
+						})
+					}
+				}
+			});
+			
+		});
+	});
+</script>
+<style>
+	.links {
+		line-height: 30px;
+		padding: 20px 0 5px;
+		border-bottom: 1px solid #666;
+		margin-bottom: 15px;
+	}
+	.links ul, .links ul li {
+		list-style: none;
+	}
+	.links ul li {
+		float: left;
+		padding: 5px 15px;
+		color: #ddd;
+	}
+
+	.links ul li a {
+		font-size: 14px;
+		color: #ddd !important;
+	}
+	.link-header {
+		color: #ec6900;
+		text-align: left;
+		font-size: 24px;
+	}
+	.cart-number-input {
+		padding: 0 6px;
+	}
+
+	.address {
+		line-height: 25px;
+		color: #bbb;
+	}
+	.link-cate-box ul li {
+		height: 25px;
+		line-height: 25px;
+		font-size: 14px;
+		color: #bbb;
+		text-align: left;
+	}
+	.link-cate-box ul li a {
+		font-size: 14px;
+		color: #bbb !important;
+		text-align: left;
+	}
+
+	.cart-btn-group {
+		height: 20px;
+		position: absolute;
+		bottom: 10px;
+		right: 10px;
+	}
+	.cart-addons {
+		float: left;
+	}
+	.cart-number-btn {
+		height: 15px;
+		line-height: 12px;
+		text-align: center;
+		width: 15px;
+		background-color: #fff;
+		border: 1px solid #999;
+		display: block;
+	}
+	.cart-image-box {
+		height: 80px;
+		width: 80px;
+		overflow: hidden;
+		float: left;
+	}
+
+	.goods-cart-box {
+		color: #333;
+		height: 80px;
+		padding: 5px;
+	}
+
+	.goods-cart-box small {
+		display: block;
+		text-align: left;
+		height: 45px;
+		overflow: hidden;
+		line-height: 15px;
+		padding: 0 10px;
+	}
+	.cart-image-box img {
+		height: 80px;
+		width: 80px;
+	}
+	.cart-ps-list li.item{
+		margin: 5px 0;
+		padding: 5px;
+		background-color: #e2e2e2;
+		position: relative;
+	}
+	.cart-ps-header {
+		height: 35px;
+		line-height: 35px;
+		color: #666;
+		background-color: #ddd;
+	}
+	.cart-ps-icon { 
+		height: 60px;
+		line-height: 55px;
+		cursor: pointer;
+		width: 170px;
+		background-color: #ccc;
+		position: absolute;
+		margin-left: -60px;
+		border-radius: 40px;
+		font-size: 32px;
+		text-align: left;
+		top: 50%;
+		margin-top: -30px;
+		z-index: 98;
+		border: 2px #fff solid;
+	}
+
+	.cart-ps-icon i {
+		color: #fff;
+		margin-left: 20px;
+	}
+	.cart-ps-list {
+		width: 230px;
+		min-height: 400px;
+		padding: 5px;
+		background-color: #fff;
+		position: relative;
+		z-index: 100;
+	}
+
+	.shopping-cart-ps {
+		box-shadow: -3px 2px 16px -7px #999;
+		position: fixed;
+		right: -230px;
+		z-index: 99;
+		top: 80px;
+		padding: 1px 0px 1px 1px;
+		background-color: #ccc;
+
+	}
+</style>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+        <title>{:__('day sign')}</title>
+        <!-- <link href="//cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"> -->
+        <link rel="stylesheet" href="__ADDON__/css/qiandao_style.css">
+    </head>
+
+    <body>
+        <div class="qiandao-warp">
+            <div class="qiandap-box">
+                <div class="qiandao-banner">
+                    <h1>每日签到</h1>
+                </div>
+                <input type="hidden" id="currDate" value="<?php echo date('Y-m-d H:i:s',time())?>">
+                <div class="qiandao-con clear">
+                    <div class="day_lists-box">
+                        <div class="qiandao-left">
+                            <div class="qiandao-left-top clear">
+                                <div class="current-date"><?php echo date('Y-m-d',time());?></div>
+                                <div class="qiandao-history qiandao-tran qiandao-radius" id="js-qiandao-history">{:__('my sign')}</div>
+                            </div>
+                            <div class="qiandao-main" id="js-qiandao-main">
+                                <div class="day-header">
+                                    <div>周日</div>
+                                    <div>周一</div>
+                                    <div>周二</div>
+                                    <div>周三</div>
+                                    <div>周四</div>
+                                    <div>周五</div>
+                                    <div>周六</div>
+                                </div>
+                                <ul class="qiandao-list" id="js-qiandao-list">
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="qiandao-right">
+                            <div class="qiandao-top">
+                                <div class="just-qiandao qiandao-sprits {:in_array(date('d'), $days)?'actived':''}" id="js-just-qiandao"></div>
+                                <p class="qiandao-notic">{:__('sign tip')}</p>
+                            </div>
+                            <div class="qiandao-bottom">
+                                <div class="qiandao-rule-list">
+                                    <h4>{:__('sign rule')}</h4>
+                                    <p>
+                                        {$rule}
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- 我的签到 layer start -->
+        <div class="qiandao-layer qiandao-history-layer">
+            <div class="qiandao-layer-con qiandao-radius">
+                <a href="javascript:;" class="close-qiandao-layer qiandao-sprits"></a>
+                <ul class="qiandao-history-inf count-info clear">
+                    <li>
+                        <p>{:__('continuous check-in')}</p>
+                        <h4>0</h4>
+                    </li>
+                    <li>
+                        <p>{:__('sign in this month')}</p>
+                        <h4>0</h4>
+                    </li>
+                    <li>
+                        <p>{:__('extra reward')}</p>
+                        <h4>0</h4>
+                    </li>
+                </ul>
+                <div class="qiandao-history-table get-sign-list" ajax-url="{:addon_url('leesign/index/getSignInfo')}" style="overflow-y: auto; height: 355px;">
+                    <table id="sign-list">
+                        <thead>
+                            <tr>
+                                <th>{:__('sign time')}</th>
+                                <th>{:__('get reward')}</th>
+                                <th>{:__('curr day extra reward')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="qiandao-layer-bg"></div>
+        </div>
+        <!-- 我的签到 layer end -->
+        <!-- 签到 layer start -->
+        <div class="qiandao-layer qiandao-active">
+            <div class="qiandao-layer-con qiandao-radius">
+                <a href="javascript:;" class="close-qiandao-layer qiandao-sprits"></a>
+                <div class="yiqiandao clear">
+                    <div class="yiqiandao-icon qiandao-sprits"></div><span class="lianxuqiandao-tip"></span>
+                </div>
+                <div class="qiandao-jiangli qiandao-sprits">
+                    <span class="qiandao-jiangli-num">0.55<em></em></span>
+                </div>
+                <a href="javascript:window.location.reload();" class="qiandao-share qiandao-tran tips-close">{:__('close btn')}</a>
+            </div>
+            <div class="qiandao-layer-bg"></div>
+        </div>
+        <!-- 签到 layer end -->
+        <script>
+            var days = {$days|json_encode};
+            var LOGIN_URL = "{:url('index/user/login')}?url={:request()->url(true)}";
+            var SIGN_URL = "{:addon_url('leesign/index/sign')}";
+            var SIGNINFO_URL = "{:addon_url('leesign/index/getSignInfo')}";
+            var MYLIST = "{$mylist}";
+        </script>
+        <script src="__CDN__/assets/libs/jquery/dist/jquery.min.js"></script>
+        <script src="__ADDON__/js/qiandao_js.js"></script>
+        <script src="__CDN__/assets/libs/fastadmin-layer/src/layer.js"></script>
+    </body>
+</html>

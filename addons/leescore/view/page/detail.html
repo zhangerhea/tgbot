@@ -1,0 +1,25 @@
+<!-- 面包屑路径导航 -->
+<div class="breadcrumb-box">
+	<div class="container">
+		<div class="row hidden-xs">
+			<div class="col-lg-12">
+				<ol class="breadcrumb topmargin-sm">
+					<li><a href="{:addon_url('leescore/index/index')}">{:__('store title')}</a></li>
+					<li class="active">{$detail.label}</li>
+				</ol>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- // End 面包屑路径导航 -->
+
+<div class="clearfix"></div>
+<div class="container padding page-content">
+	<div class="row">
+		<div class="col-sm-12">
+			<h2>{$detail.title}</h2>
+			<hr style="width:100%; margin-bottom:20px; max-width: 100%; ">
+			{$detail.content}
+		</div>
+	</div>
+</div>

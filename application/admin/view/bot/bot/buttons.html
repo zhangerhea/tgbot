@@ -1,0 +1,138 @@
+<form id="edit-form" class="form-horizontal" role="form" data-toggle="validator" method="POST" action="">
+
+    <div class="form-group">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-10">
+            <table class="table  ">
+                <thead>
+                <tr>
+                    <td></td>
+                    <td width="150px"></td>
+                </tr>
+                </thead>
+                <tbody id="button_body">
+
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="5"><a href="javascript:;" class="btn btn-sm btn-success btn-append"><i
+                            class="fa fa-plus"></i> {:__('Append')}</a></td>
+                </tr>
+                </tfoot>
+            </table>
+
+            <!--请注意实际开发中textarea应该添加个hidden进行隐藏-->
+            <textarea id="buttons_json" class="form-control hidden" cols="30" rows="5">{$buttons}</textarea>
+            <!--插入按钮模板 start-->
+            <script id="button_tmpl" type="text/html">
+                <li class="button">
+                    <input type="hidden" name="buttons[<%=row%>][<%=index%>][text]" value="按钮"/>
+                    <input type="hidden" name="buttons[<%=row%>][<%=index%>][url]" value=""/>
+                    <input type="hidden" name="buttons[<%=row%>][<%=index%>][callback_data]" value=""/>
+                    <input type="hidden" name="buttons[<%=row%>][<%=index%>][web_app][url]" value=""/>
+                    <button type="button" class="btn-setting">按钮</button>
+                </li>
+            </script>
+            <!--插入按钮模板 end-->
+            <!--默认编辑模板 start-->
+            <script id="edit_tmpl" type="text/html">
+                <%for(i = 0; i < list.length; i ++) {%>
+                <tr class="form-inline">
+                    <td>
+                        <div class="row-flex">
+                            <%for(j = 0; j < list[i].length; j ++) {%>
+                            <li class="button">
+                                <input type="hidden" name="buttons[<%=i%>][<%=j%>][text]" value="<%=list[i][j].text%>"/>
+                                <input type="hidden" name="buttons[<%=i%>][<%=j%>][url]" value="<%=list[i][j].url%>"/>
+                                <input type="hidden" name="buttons[<%=i%>][<%=j%>][callback_data]" value="<%=list[i][j].callback_data%>"/>
+                                <input type="hidden" name="buttons[<%=i%>][<%=j%>][web_app][url]" value="<%=list[i][j].web_app%>"/>
+                                <button type="button" class="btn-setting "><%=list[i][j].text%></button>
+                            </li>
+                            <%}%>
+                        </div>
+                    </td>
+                    <td>
+                        <!--下面的两个按钮务必保留-->
+                        <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                        <span class="btn btn-sm btn-success btn-add "><i class="fa fa-plus"></i></span>
+                    </td>
+                </tr>
+                <%}%>
+
+            </script>
+            <!--默认编辑模板 end-->
+            <!--插入行模板 start-->
+            <script id="row_tmpl" type="text/html">
+                <tr class="form-inline" >
+                    <td>
+                        <div class="row-flex">
+                            <%include('button_tmpl')%>
+                        </div>
+                    </td>
+                    <td>
+                        <!--下面的两个按钮务必保留-->
+                        <span class="btn btn-sm btn-danger btn-remove"><i class="fa fa-times"></i></span>
+                        <span class="btn btn-sm btn-success btn-add "><i class="fa fa-plus"></i></span>
+                    </td>
+                </tr>
+            </script>
+            <!--插入行模板 end-->
+
+        </div>
+    </div>
+
+    <div class="form-group layer-footer">
+        <label class="control-label col-xs-12 col-sm-2"></label>
+        <div class="col-xs-12 col-sm-8">
+            <button type="submit" class="btn btn-primary btn-embossed disabled">{:__('OK')}</button>
+        </div>
+    </div>
+</form>
+<!--按钮设置 start-->
+<div id="setting_tmpl" style="display: none;min-height: 100px" class="content">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">文字:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input type="text" id="btn_text" class="form-control" size="5" value=""  data-rule="required" placeholder="按钮文字">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">连接:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input type="text" id="btn_url" class="form-control" size="5" value=""  data-rule="url" placeholder="URL">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">命令:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input type="text" id="btn_callback_data" class="form-control" size="20" value=""
+                       placeholder="回复内容的命令">
+
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="control-label col-xs-12 col-sm-2">小程序:</label>
+            <div class="col-xs-12 col-sm-8">
+                <input type="text" id="btn_web_app" class="form-control" size="20" value=""  data-rule="url"
+                       placeholder="小程序URL">
+
+            </div>
+        </div>
+    </form>
+</div>
+<!--按钮设置 end-->
+<style>
+    .row-flex {
+        justify-content: space-around;
+    }
+
+    .button {
+        flex: 1;
+        margin: auto 5px;
+        display: grid;
+    }
+    .n-right {
+        display: block;
+    }
+</style>

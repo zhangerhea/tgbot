@@ -1,0 +1,373 @@
+<style>
+	h2{ color: #666; }
+	.text-muted {
+		height: 25px;
+		line-height: 25px;
+	}
+	.detail-box {
+		padding: 10px 0 30px 0;
+	}
+
+	
+	.box-content {
+		height: 390px;
+	}
+	.score-content {
+		background-color: #f5f5f5;
+	}
+	.box-content .item{
+		height: 25px;
+		line-height: 25px;
+	}
+	.fz-12 { font-size: 12px;}
+	.fz-14 { font-size: 14px;}
+	.price-bottom {}
+	.alert-tips {
+		padding: 0px;
+		margin-top: 2vw;
+		/* border: 1px solid #ddd; */
+		color: #999;
+		font-size: 12px;
+	}
+	.page-content { background-color: #fff; padding: 50px;}
+	.detail-desc {
+		background-color:#fff;
+	}
+	.ovh { overflow: hidden;}
+	.ovx { overflow: auto; }
+	.w300 { width:340px;}
+	.height { height:300px;}
+	.box-detail-thumbs { width:270px; overflow: hidden}
+	.thumb-icon { width:62px; height:63px; line-height:63px}
+	.thumb-active { border-color: #444c69;}
+	.thumb-btn-tabs { width:35px; }
+	.details-thumb-img { width: 61px !important; height:53px !important;}
+	.margin-3 { margin:3px;}
+	#thumb-view { width: 100%;}
+	@media(max-width:768px){
+		.detail-desc {
+			background-color:none;
+		}
+		.page-content { background-color: #fff; padding: 20px 0 0 0;}
+		.nav-tabs-custom { border: 1px solid #eee;}
+		.goods-right{ margin-top: 20px;}
+		.price-bottom { margin: 15px 0;}
+		.mobile-nopadding { margin: -15px;}
+		#thumb-view { width: 100%;}
+	}
+</style>
+
+<div class="detail-box">
+	<div class="container">
+		<!-- 面包屑路径导航 -->
+			<div class="row">
+				<ol class="breadcrumb hidden-xs" style="margin-bottom:0px;">
+					<li><a href="{:addon_url('leescore/index/index')}">{:__('store title')}</a></li>
+					<li><a href="{:addon_url('leescore/goods/index')}">{:__('goods list')}</a></li>
+					<li class="active">{:__('goods detail')} - {$item.name}</li>
+				</ol>
+			</div>
+		<!-- 面包屑路径导航 -->	
+
+		<div class="row">
+			
+			<div class="col-md-9">
+				<div class="panel panel-default">
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-md-12 detail-desc">
+								<div class="row">
+									<div class="clearfix padding-right" style=" min-height:434px; position: relative; ">
+										<div class="col-md-5 padding-none">
+											<div class="w340 h300 ovh">
+												<img src="{$item.thumb}" id="thumb-view" class="img-responsive img-thumbnail radius-none" style="border: 1px solid #eee; max-height: 310px;" />
+												
+												<div class="w340 ovx margin-top">
+													<div class="thumb-btn-tabs pull-left thumb-icon" data-fx="left">
+														<i class="fa fa-arrow-left"></i>
+													</div>
+													<div class="box-detail-thumbs pull-left text-center ovh">
+														<?php 
+															$images = explode(",",$item['pics']);
+															$width = 275;
+															if(count($images) > 0){
+																$thumb_number = count($images) +1;
+																$width = $thumb_number * 70; 
+															}
+															
+														?>
+														<div class="thumb-tabs" style="width: {$width}px">
+															<a href="javascript:;" class="thumbnail details-thumb thumb-active radius-none thumb-icon pull-left margin-3" style="margin-bottom: 7px;">
+																<img src="{$item.thumb}" class="img-responsive details-thumb-img" width="100%" />
+															</a>
+															
+															{if($images[0] != '')}
+																<?php
+																	$thumb_number = count($images) +1;
+																	$width = $thumb_number * 61; 
+																?>
+																{volist name="$images" id="pic"}
+																	
+																	<a href="javascript:;" class="thumbnail details-thumb radius-none thumb-icon pull-left margin-3" style="margin-bottom: 7px;">
+																		<img src="{$pic}" class="img-responsive details-thumb-img" width="100%" />
+																	</a>
+																	
+																{/volist}
+															{/if}
+														</div>
+														
+													</div>
+													<div class="thumb-btn-tabs pull-left thumb-icon text-center" data-fx="right">
+														<i class="fa fa-arrow-right"></i>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div class="col-md-7">
+											<div class="mobile-nopadding">
+												<form action="{:addon_url('leescore/order/createOrderOne')}" method="Post" name="buyPost" id="buyPost">
+													<input type="hidden" name="id" value="{$item['id']}" />
+													<div class="row">
+														<div class="col-xs-12 fz-14">
+															<h2 class="">{$item.name}</h2>
+															<div class="hidden-xs"><br /></div>
+						
+															<div class="text-muted">积分：
+																<span class="text-danger h3">{$item.scoreprice}</span> {:__('score')}
+															</div>
+															<div class="text-muted">
+																金额：
+																<span class="text-danger h3"> {$item['money']}</span> {:__('money')}
+															</div>
+															<div class="text-muted">{:__('order by stock')}：{$item.stock}</div>
+															<div class="text-muted">{:__('use num')}：{$item.usenum}</div>
+														</div>
+													</div>
+													
+													{if condition="$item.stock gt 0"}															
+														<div class="price-bottom topmargin-sm">
+															<div class="row">
+																<div class="col-xs-5">
+																	<div class="input-group">
+																		<span class="input-group-addon">{:__('buy num')}</span>
+																		<input type="Number" name="number" maxlength="9" min="1" value="1" class="form-control buynum {if($item['stock'] <= 0)}disabled{/if}">
+																	</div>
+																</div>
+																<div class="col-xs-7">
+																	<div class="buy-btn-group">
+																		<a href="javascript:;" class="btn btn-success buy_order btn-sm radius-none pull-left" style="margin-right: 10px;">{:__('buy')}</a>
+																		<a data-paramid="{$item.id}" data-url="{:addon_url('leescore/cartapi/postCartAdd')}" href="javascript:;" class="btn btn-default radius-none add-cart btn-sm pull-left">
+																			<i class="fa fa-cart-plus"></i>
+																			{:__('加入购物车')}</a>
+																	</div>	
+																</div>
+															</div>
+															<div class="clearfix"></div>
+														</div>
+													{else /}
+														<div class="price-bottom" style="position:relative;">
+															<div class="col-sm-5">
+																<div class="input-group">
+																	<span class="input-group-addon">{:__('buy num')}</span>
+																	<input type="Number" name="number" maxlength="9" min="1" value="1" class="form-control buynum {if($item['stock'] <= 0)}disabled{/if}">
+																</div>
+															</div>
+															<div class="col-sm-7">
+																<a href="javascript:;" class="btn btn-danger radius-none disabled pull-right">{:__('min stock')}</a>
+															</div>
+															<div class="clearfix"></div>
+														</div>
+													{/if}
+												</form>
+												<div class="row">
+													<div class="col-sm-12">
+														<div class="alert-tips">
+															<h3>
+																{$article.title}
+															</h3>
+															{$article.content}
+														</div>
+													</div>
+												</div>
+												<div class="clearfix"></div>
+											</div>
+										</div>
+									</div>
+									<div class="col-md-12">
+							
+										<div class="goods-right row" style="padding-right: 15px;">
+											<div class="detail-rule row clearfix">
+												<!-- 切换卡：兑换规则、兑换说明 -->
+												<div class="col-md-12">
+													<!-- Custom Tabs -->
+													<div class="nav-tabs-custom radius-none">
+														<ul class="nav nav-tabs">
+															<li class="active"><a href="#desc" data-toggle="tab">{:__('product detail info')}</a></li>
+															<li><a href="#rule" data-toggle="tab">{:__('goods rule')}</a></li>
+														</ul>
+														<div class="tab-content">
+															<div class="tab-pane active" id="desc">
+																<div class="padding">
+																	{$item.body}
+																</div>
+															</div>
+															<!-- /.tab-pane -->
+															<div class="tab-pane" id="rule">
+																<div class="padding">
+																	{$item.rule}
+																</div>
+															</div>
+															<!-- /.tab-pane -->
+														</div>
+													<!-- /.tab-content -->
+													</div>
+													<!-- nav-tabs-custom -->
+												</div>
+												<!-- ./ 切换卡：兑换规则、兑换说明 -->
+											</div>
+										</div>
+									</div>
+								</div>
+								
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-3 hidden-xs">
+				<div class="goods-left row" style="padding-left: 15px;">
+					<div class="box box-warning radius-none" style="border-top: 2px solid #ccc; box-shadow: none !important;">
+						<div class="box-header with-border">
+							<h3 class="box-title">{:__('convert')}</h3>
+						<!-- /.box-tools -->
+						</div>
+						<!-- /.box-header -->
+						<div class="padding">
+							{volist name="usenumdesc" id="vo"}
+								<div class="padding-top padding-bottom goods-detail-li {if($i % 2 == 0)}goods-double{/if}">
+									<div class="row">
+										<div class="col-xs-12">
+											<div class="detail-recommend-img-box">
+												<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}"><img class="center-block img-responsive" style="width: 100%;" src="{$vo.thumb}" /></a>
+											</div>
+										</div>
+										<div class="col-xs-12 no-margin">
+											<h3 class="more text-center"><a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}">{$vo.name}</a></h3>
+											<div class="text-area text-center">
+												<div class="col-xs-12 no-padding more text-muted fz-14">
+													{:__('price')}: <span class="text-danger h3"> {$vo.scoreprice}</span> {:__('score')} + <span class="text-danger h3">{$vo.money}</span> {:__('money')}
+												</div>
+											</div>
+											<div class="clearfix"></div>
+											<div class="margin-top text-center btn-group" style="display: flex;justify-content: center;" role="group">
+												<a data-paramid="{$vo.id}" data-url="{:addon_url('leescore/cartapi/postCartAdd')}" href="javascript:;" style="display: inline-block;" class="btn radius-none btn-default btn-xs {if($vo['stock'] < 1)}disabled{/if} add-cart"><span class="fa fa-cart-plus"></span> {:__('加入购物车')}</a>
+												<a href="{:addon_url('leescore/goods/details',array('gid' => $vo['id']))}" style="display: inline-block; padding:1px 20px;"  class="btn btn-success btn-xs radius-none {if($vo['stock'] < 1)}disabled{/if}">{:__('detail')}</a>
+											</div>
+											
+										</div>
+										<div class="clearfix"></div>
+									</div>
+								</div>
+							{/volist}
+
+							<style>
+								.detail-recommend-img-box {
+									width: 100%;
+									max-height: 270px;
+									overflow: hidden;
+								}
+							</style>
+						</div>
+						<!-- /.box-body -->
+					</div>
+				</div>
+			</div>
+			<div class="clearfix"></div>
+			
+		</div>
+	</div>
+</div>
+<!-- Layer -->
+<script src="__CDN__/assets/libs/fastadmin-layer/dist/layer.js"></script>
+<script>
+	$(document).ready(function() {
+		function count(number)
+		{
+			var score = '{$item["scoreprice"]}';
+			var money = '{$item["money"]}';
+			score = score * number;
+			money = money * number;
+			$("#score").html(score);
+			$("#money").html(money)
+			$("#buynum").html(number);
+		}
+
+		var number = $(".buynum").val();
+		count(number);
+		$(".buynum").on('change', function() {
+			var num = $(this).val();
+			count(num);
+		});
+
+		//限制数量框输入的内容必须为数字，如果不是数字就改成1
+		$(".buynum").on('blur', function() {
+			var val = $(this).val();
+			if(val <= 0) $(".buynum").val(1);
+		});
+
+		//订单确认
+		$('.buy_order').on('click', function() {
+			$("#buyPost").submit();
+		});
+
+		
+		$(".details-thumb").on('click', function() {
+			event.stopPropagation(); // 阻止冒泡
+			var thisPath = $(this).children('img').attr("src");
+			$(".details-thumb").removeClass('thumb-active');
+			$(this).addClass('thumb-active');
+			$("#thumb-view").attr('src', thisPath);
+		});
+
+		$("#buy_num").on('keyup', function() {
+			if($(this).val() <= 0 ){
+				$(this).val(1);
+			}
+		});
+
+		$(".recommend-li").last().removeClass('recommend-li');
+
+		$(".thumb-btn-tabs").on('click', function(){
+			let fx = $(this).attr("data-fx");
+			let items = $(".thumb-tabs a");
+			let ac = 0;
+			items.each(function(index){
+				if(items.eq(index).attr("class") != 'thumbnail details-thumb radius-none thumb-icon pull-left margin-3'){
+					ac = index;
+					return false;
+				}
+			});
+
+			// console.log(ac);
+			items.removeClass("thumb-active");
+			let len = items.length - 1;
+			if(fx == 'right' && ac < len){
+				++ac;
+				
+			}else if(fx == 'left' && ac > 0){
+				--ac;
+			}else{
+				ac = ac;
+			}
+
+			if(ac % 4 == 0) {
+				let lefts = ac / 4 * 275;
+				$(".thumb-tabs").css("margin-left", "-"+lefts+"px");
+			}else{
+				if((ac / 4) < 1) $(".thumb-tabs").css("margin-left", "0px");
+			}
+			
+			items.eq(ac).click();
+		});
+	});
+</script>

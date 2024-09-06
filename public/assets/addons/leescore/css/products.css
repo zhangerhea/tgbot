@@ -1,0 +1,119 @@
+.prod-nav {
+  border-bottom: 1px solid #f2f2f2;
+  box-shadow: rgba(0, 0, 0, 0.07) 0px 5px 5px;
+}
+
+.prod-nav-pc {
+  position: relative;
+  margin-left: 15px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+.prod-navpc-header {
+  line-height: 40px;
+  font-weight: 700;
+  position: relative;
+  padding-right: 20px;
+  color: #A8A8A8;
+}
+
+.prod-navpc-header span {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  line-height: 20px;
+  width: 20px;
+  text-align: center;
+  display: inline-block;
+  vertical-align: top;
+  font-weight: 400;
+  margin-top: -10px;
+  transition: transform .3s;
+}
+
+.prod-navpc-header.active span {
+  transform: rotate(180deg);
+}
+
+.prod-navpc-body {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  background-color: #fff;
+  width: 120px;
+  transform: translateX(-50%);
+}
+
+.prod-navpc-body a:last-child {
+  border-bottom: none;
+}
+
+.prod-navpc-body .prodnav-link {
+  display: block;
+  text-align: center;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.prod-navpc-body .prodnav-link::before {
+  display: none;
+}
+
+.prodd-color > span {
+  border: 2px solid #dadada;
+}
+
+.prodnav-buy {
+  margin: 5px 15px;
+  display: inline-block;
+  vertical-align: top;
+  line-height: 20px;
+  /* font-weight: 700; */
+  color: #fff;
+  cursor: pointer;
+  transition: all .3s;
+  border: 1px solid #FF6C36;
+  border-radius: 3px;
+  padding: 5px 10px;
+  background-color: #FF6C36;
+}
+
+.prodnav-buy:hover {
+  color: #ffffff;
+  background-color: #FF6C36;
+}
+
+.prodh-item__desc a {
+  color: #FF6C36;
+}
+
+.prodb-ytbvideo {
+  text-align: center;
+}
+
+.prodb-ytbvideo .video-iframe {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .prod-nav-pc {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .prod-nav-wrap > a:nth-of-type(n+1) {
+    display: none;
+  }
+  .prod-nav-wrap > a.prodnav-buy {
+    display: inline-block;
+  }
+  .prod-navm-body > a:nth-of-type(-n+1) {
+    display: block;
+  }
+  .prodb-ytbvideo .video-iframe {
+    width: auto;
+    height: auto;
+  }
+}

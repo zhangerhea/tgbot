@@ -1,0 +1,12 @@
+alter Table `__PREFIX__leescore_address` modify column `createtime` bigint(16);
+alter Table `__PREFIX__leescore_ads` modify column `starttime` bigint(16);
+alter Table `__PREFIX__leescore_ads` modify column `endtime` bigint(16);
+alter Table `__PREFIX__leescore_cart` modify column `createtime` bigint(16);
+alter Table `__PREFIX__leescore_category` modify column `createtime` bigint(16);
+alter Table `__PREFIX__leescore_goods` modify column `createtime` bigint(16);
+alter Table `__PREFIX__leescore_goods` modify column `updatetime` bigint(16);
+alter Table `__PREFIX__leescore_goods` modify column `firsttime` bigint(16);
+alter Table `__PREFIX__leescore_goods` modify column `lasttime` bigint(16);
+alter Table `__PREFIX__leescore_order` modify column `createtime` bigint(16);
+alter Table `__PREFIX__leescore_order` modify column `paytime` bigint(16);
+alter Table `__PREFIX__leescore_order_goods` modify column `createtime` bigint(16);

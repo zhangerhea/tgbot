@@ -1,0 +1,11 @@
+{if isset($sidenav) && $sidenav}
+<ul class="list-group">
+    <li class="list-group-heading">{:__('VIP中心')}</li>
+    {if isset($sidenav) && in_array('viplist', $sidenav)}
+    <li class="list-group-item {:check_nav_active('vip/viplist')}"><a href="{:url('index/vip/viplist')}"><i class="fa fa-diamond fa-fw"></i> {:__('VIP列表')}</a></li>
+    {/if}
+    {if isset($sidenav) && in_array('record', $sidenav)}
+    <li class="list-group-item {:check_nav_active('vip/record')}"><a href="{:url('index/vip/record')}"><i class="fa fa-list fa-fw"></i> {:__('VIP记录')}</a></li>
+    {/if}
+</ul>
+{/if}

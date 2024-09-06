@@ -1,0 +1,432 @@
+<link href="__CDN__/assets/addons/leescore/css/goods.min.css" rel="stylesheet" />
+<!-- 面包屑路径导航 -->
+<div class="breadcrumb-box">
+	<div class="container">
+		<div class="row hidden-xs">
+			<div class="col-lg-12">
+				<ol class="breadcrumb topmargin-sm">
+					<li><a href="{:addon_url('leescore/index/index')}">{:__('store title')}</a></li>
+					<li class="active">{:__('goods list')}</li>
+				</ol>
+			</div>
+		</div>
+
+
+		<div class="goods-right clearfix">
+			<div class="clearfix search radius-none">
+				<form action="" name="myForm" class="form-inline myForm " method="get">
+					<div class="search-paytype-box">
+						<ul class="search-box">
+							<?php 
+								$payType = input('get.payType');
+								$payType = isset($payType) && !empty($payType) ? trim($payType) : '';
+								$cateType = input('get.cateType');
+								$cateType = isset($cateType) && !empty($cateType) ? trim($cateType) : '';
+
+								$type_item = ['all' => '全部', 'score' => '积分', 'money' => '余额', 'sam' => '积分+余额'];
+							?>
+							<li class="search-box-item col-xs-12 col-md-1">
+								{:__('goods type')}: 
+							</li>
+							<input type="hidden" class="input_paytype" name="paytype" value="{$payType}" />
+							<input type="hidden" class="input_category" name="category" value="{$cateType}" />
+							<li class="visible-xs">
+								<select name="paytypes" class="form-control" id="paytype">
+									{foreach $type_item as $k => $vo}
+										<?php
+											if($k == 'all') $k = ''; 
+										?>
+										<option value="{$k}">{$vo}</option>
+									{/foreach}
+								</select>
+							</li>
+							{foreach $type_item as $k => $vo}
+								<?php
+									if($k == 'all') $k = ''; 
+								?>
+								<li class="search-box-item hidden-xs">
+									<a href="{:addon_url('leescore/goods/index',array('payType' => $k, 'cateType' => $cateType))}" class="btn btn-flat {if($payType == $k)}btn-success{else /}btn-default{/if} payType">
+										{$vo}
+									</a>
+								</li>
+							{/foreach}
+							
+						</ul>
+						<div class="clearfix"></div>
+					</div>
+					<div class="clearfix"></div>
+					<div class="search-paytype-box">
+						<ul class="search-box search-box-types">
+							<li class="search-box-item col-xs-12 col-md-1">
+								{:__('goods categorys')}：
+							</li>
+							<li class="level_liandong visible-xs">
+								<div class="row">
+									<div class="col-xs-6 select-item">
+										<select name="catetype" id="m_catetype" class="form-control">
+											<option value="" {if($cateType == '')} selected {/if}>全部</option>
+											{volist name="$goods_cate" id="ca"}
+												<option value="{$ca['id']}" {if($cateType == $ca['id'])}selected{/if}>{$ca.name}</option>
+											{/volist}
+										</select>
+									</div>
+									<div class="col-xs-6 select-items">
+
+									</div>
+								</div>
+								
+							</li>
+							<li class="search-box-item hidden-xs">
+								<a href="{:addon_url('leescore/goods/index',array('payType' => $payType, 'cateType' => ''))}" class="btn btn-flat {if($cateType == '')}btn-danger{else /}btn-default{/if} cateType">
+									{:__('all')}
+								</a>
+							</li>
+							{volist name="$goods_cate" id="ca"}
+								<li class="search-box-item search-types hidden-xs">
+									<a href="{:addon_url('leescore/goods/index',array('payType' => $payType, 'cateType' => $ca['id']))}" class="btn btn-flat hidden-xs {if($cateType == $ca['id'])}btn-danger{else /}btn-default{/if} cateType" {if($cateType == $ca['id'])}data-active="true"{/if}>
+										{$ca.name}
+									</a>
+									
+									<div class="over-show hide">
+										<ul>
+											
+											{if(count($ca['navs']) > 0)}
+												{volist name="$ca['navs']" id="v"}
+												<li class="f-l-item pull-left padding-none" style="margin-right:10px;"><a href="{:addon_url('leescore/goods/index',array('payType' => $payType, 'cateType' => $v['id']))}"
+													class="btn btn-flat btn-block {if($cateType == $v['id'])}btn-danger{else /}btn-default{/if}">{$v['name']}</a></li>
+												{/volist}
+											{else}
+												{:__('this type no category')}
+											{/if}
+										</ul>
+									</div>
+									<div class="visible-xs">
+										{if(count($ca['navs']) > 0)}
+											{volist name="$ca.navs" id="v"}
+												<a href="{:addon_url('leescore/goods/index',array('payType' => $payType, 'cateType' => $ca['id'],'ttypeid' => $v['id']))}" class="btn btn-flat cateTypes {if(input('get.ttypeid') == $v['id'])}btn-danger{else}btn-default{/if}" {if($cateType == $ca['id'])}data-active="true"{/if}>
+													{$v['name']}
+												</a>
+											{/volist}
+										{else}
+											{:__('this type no category')}
+										{/if}
+									</div>
+								</li>
+							{/volist}
+						</ul>
+						<div class="clearfix"></div>
+					</div>
+					<div class="clearfix"></div>
+					<br>
+					<div class="search-paytype-box hidden-xs">
+						<div class="form-group">
+							<div class="row">
+								<div class="col-md-4 col-xs-12">
+									<label class="control-label ">{:__('score')}</label>
+									<div class="row">
+										<div class="col-md-5 col-xs-5">
+											<input style="width: 100%" type="Number" id="score-start" min="0" name="score-start" class="form-control" {if condition="input('?get.score-start')"}value="{:input('get.score-start')}"{/if} placeholder="0">
+										</div>
+										<div class="col-md-2 col-xs-2 text-center">
+											 - 
+										</div>
+										<div class="col-md-5 col-xs-5">
+											<input style="width: 100%" type="Number" id="score-end" min="0" name="score-end" class="form-control" {if condition="input('?get.score-end')"}value="{:input('get.score-end')}"{/if} placeholder="100" />
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-4 col-xs-12 col-md-offset-1">
+									<label class="control-label padding-left">{:__('price')}</label>
+									<div class="row">
+										<div class="col-md-5 col-xs-5">
+											<input type="Number" style="width: 100%" id="money-start" name="money-start" class="form-control" {if condition="input('?get.money-start')"}value="{:input('get.money-start')}"{/if} min="0" placeholder="0">
+										</div>
+										<div class="col-md-2 col-xs-2 text-center">
+											- 
+										</div>
+										<div class="col-md-5 col-xs-5">
+											<input type="Number" style="width: 100%" id="money-end" min="0" name="money-end" class="form-control" {if condition="input('?get.money-end')"}value="{:input('get.money-end')}"{/if} placeholder="100" />
+										</div>
+									</div>
+								</div>
+
+								<div class="col-md-3 col-xs-12">
+									<br>
+									<button class="btn btn-danger btn-flat search-btn text-center hidden-xs" type="button"> <i class="fa fa-search"></i> {:__('search')}</button>
+									<button class="btn btn-danger btn-flat search-btn text-center btn-block visible-xs" type="button"> <i class="fa fa-search"></i> {:__('search')}</button>
+								</div>
+							</div>
+						</div>
+						<div class="clearfix"></div>
+					</div>
+				</form>
+				<div class="clearfix"></div>
+			</div>
+		</div>
+	</div>
+<!-- // End 面包屑路径导航 -->
+
+<div class="clearfix"></div>
+<div class="container padding page-content">
+	<div class="row">
+		<div class="col-sm-12">
+
+				<div class="page-header" style="margin: 3vw 0 2vw;" >
+					<div class="text-center">
+						<button type="button" data-field="updatetime" data-status="" class="btn btn-flat order-btn active">{:__('order by time')}</button>
+						<button type="button" data-field="usenum" data-status="" class="btn btn-flat order-btn">{:__('order by usenum')}</button>
+						<button type="button" data-field="scoreprice" data-status="" class="btn btn-flat order-btn">{:__('order by scoreprice')}</button>
+						<button type="button" data-field="stock" data-status="" class="btn btn-flat  order-btn">{:__('order by stock')}</button>
+						<button type="button" data-field="money" data-status="" class="btn btn-flat  order-btn">{:__('price')}</button>
+					</div>
+				</div>
+				<div class="goods-list wow fadeInRight">
+					<ul class="f-list-box row">
+						
+					</ul>
+				</div>
+				<div class="col-sm-12 padding text-center page">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+	span { font-size: 14px;}
+	.w50 { width:50%;}
+	.ovh { overflow: hidden;}
+	.padd-r-15 { padding-right:15px;}
+</style>
+<script>
+
+	function moveDirection(tag,e){
+		var w = $(tag).width();
+		var h = $(tag).height();
+		var x = (e.pageX - tag.offsetLeft - (w / 2)) * (w > h ? (h / w) : 1);
+		var y = (e.pageY - tag.offsetTop - (h / 2)) * (h > w ? (w / h) : 1);
+
+		console.log(x,"-",y);
+		var direction = Math.round((((Math.atan2(y, x) * (180 / Math.PI)) + 180) / 90) + 3) % 4; 
+		return direction;
+	}
+
+	$(document).ready(function() {
+		//分类搜索条件追加显示
+		if($('.cateType[data-active=true]').length <= 0)
+		{
+			var html = '';
+			var active = $(".over-show a.btn-danger");
+			$(".data-remove").remove();
+			if(active.length > 0)
+			{
+				html =  '<li class="search-box-item">'
+						+'<a href="javascript:;" class="btn btn-flat btn-danger data-remove">'
+						+active.html()
+						+'</a></li>';
+			}
+			$(".search-box-types").append(html)
+		}
+
+		$("#m_catetype").on("change", function(){
+			var val = $(this).val();
+			$.ajax({
+				type: "post",
+				url: "{:addon_url('leescore/goods/getDLevelType')}",
+				data: {typeid: val},
+				dataType: "json",
+				success: function (res) {
+					console.log(res);
+					$(".select-items").html(res.data);
+				}
+			});
+		});
+
+		//鼠标经过分类按钮时显示当前分类所有下级分类
+		$(".search-types > .cateType").on("mouseover mouseleave",function(e){
+			var eType = e.type;
+			if(eType == 'mouseover')
+			{
+				$(".over-show").addClass("hide");
+				$(this).next('.over-show').removeClass("hide");
+			}else if(eType == 'mouseleave'){
+				//当前按钮距离页面顶部距离
+				var objY = $(this).offset().top + 20; //容器有效高度是23
+				if(e.pageY < objY)
+				{
+					//鼠标退出时不是往下方移动的。将显示出来的分类隐藏起来。
+					$(this).next('.over-show').addClass("hide");
+				}
+			}
+		});
+		
+		//鼠标退出吸附窗口时隐藏吸附窗口
+		$(".search-types > .over-show").on("mouseleave", function () {
+			$(".over-show").addClass("hide");
+		});
+
+		// 移动端按分类查询
+		$(".myForm").on("change", "select" ,function () {
+			var len = $(".myForm select").length;
+			// console.log(len);
+			var typeid = '';
+			if(len > 2){
+				if($(".myForm select[name=cateTypes]").val() != '') {
+					typeid = $(".myForm select[name=cateTypes]").val();
+				}else{
+					typeid = $(".myForm select[name=catetype]").val();
+				}
+			}else if( $(".myForm select[name=cateTypes]").val() == '' && $(".myForm select[name=catetype]").val() == ''){
+				typeid = '';
+			}
+			else{
+				typeid = $(".myForm select[name=catetype]").val();
+			}
+			var cateType = typeid == '' ? '' : typeid;
+			console.log(typeid);
+			var param = {"paytype": $(".myForm select[name=paytypes]").val(), "category": cateType}
+			getDataList('updatetime', 'desc', param);
+
+			
+		});
+
+		$(".search-btn").on('click', function() {
+    		//查询条件
+			var paytype = $(".input_paytype").val();
+			var keywords = "{:input('get.keywords')}";
+			var category = $(".input_category").val();
+			var score_start = $("#score-start").val();
+			var score_end = $("#score-end").val();
+			var money_start = $("#money-start").val();
+			var money_end = $("#money-end").val();
+    		var param = {"paytype":paytype, "category":category, "score_start":score_start, "score_end": score_end, 'money_start': money_start, 'money_end': money_end, 'keywords': keywords};
+			getDataList('updatetime','desc',param);
+		});
+
+		
+		if(keywords != '')
+		{
+    		//查询条件
+			var paytype = $(".input_paytype").val();
+			var keywords = "{:input('get.keywords')}";
+			var category = $(".input_category").val();
+			var score_start = $("#score-start").val();
+			var score_end = $("#score-end").val();
+			var money_start = $("#money-start").val();
+			var money_end = $("#money-end").val();
+    		var param = {"paytype":paytype, "category":category, "score_start":score_start, "score_end": score_end, 'money_start': money_start, 'money_end': money_end, 'keywords': keywords};
+			getDataList('updatetime','desc',param);
+		}else{
+			//查询条件
+			var paytype = $(".input_paytype").val();
+			var category = $(".input_category").val();
+			var score_start = $("#score-start").val();
+			var score_end = $("#score-end").val();
+			var money_start = $("#money-start").val();
+			var money_end = $("#money-end").val();
+			var param = {"paytype":paytype, "category":category, "score_start":score_start, "score_end": score_end, 'money_start': money_start, 'money_end': money_end, 'keywords': keywords};
+			var cookie = $.cookie("orderby");
+			//排序
+			var toStr = "<i class=\"fa "+ cookie +"\"></i>";
+			$(".order-btn").eq(0).append(toStr).attr('data-status',"fa-angle-down");
+			$.cookie("field", $(".order-btn").eq(0).attr("data-field"));
+			//数据提取
+			getDataList('updatetime','desc',param);
+		}
+	/* 对排序控件进行初始化 */
+
+		//初始化排序
+		if($.cookie('orderby') === undefined)
+		{
+			$.cookie('orderby','fa-angle-down');
+		}
+
+
+
+	/* 排序控件进行初始化完成 */
+		$(".order-btn").on('click', function(event) {
+    		//查询条件
+    		var paytype = $("input.input_paytype").val();
+			var keywords = "{:input('get.keywords')}";
+    		var category = $("input.input_category").val();
+    		var score_start = $("#score-start").val();
+    		var score_end = $("#score-end").val();
+    		var money_start = $("#money-start").val();
+    		var money_end = $("#money-end").val();
+    		var param = {"paytype":paytype, "category":category, "score_start":score_start, "score_end": score_end, 'money_start': money_start, 'money_end': money_end, 'keywords': keywords};
+			if($(this).attr('data-status') == '')
+			{
+				$(this).attr('data-status','fa-angle-down')
+			}
+			var status = $(this).attr('data-status');
+			var field = $(this).attr('data-field');
+			$.cookie('field',field);
+			if(field == $.cookie('field') && status == 'fa-angle-down')
+			{
+				toStr = "<i class=\"fa fa-angle-up\"></i>";
+				$(this).attr("data-status","fa-angle-up");
+				$.cookie('orderby','fa-angle-up');
+				var paramOrder = 'asc';
+			}
+			else if(field == $.cookie('field') && status == 'fa-angle-up')
+			{
+				toStr = "<i class=\"fa fa-angle-down\"></i>";
+				$(this).attr("data-status","fa-angle-down");
+				$.cookie('orderby','fa-angle-down');
+				var paramOrder = 'desc';
+			}
+			getDataList(field, paramOrder, param);
+			$(".order-btn").removeClass('active');
+			$(".order-btn i").remove();
+			$(this).addClass('active').append(toStr);
+		});
+	});
+
+	//请求分页数据
+	function getDataList(field,sort,param)
+	{
+		param.field = field;
+		param.sort = sort;
+		var uri = "{:addon_url('leescore/goods/getList')}";
+		$.ajax({
+			url: uri,
+			type: 'GET',
+			dataType: 'json',
+			data: param,
+			success: function(list)
+			{
+				$(".page").html(list.page);
+				$(".goods-list ul").html(list.list);
+			},
+			error: function(error)
+			{
+				console.log(error);
+			}
+		});
+	}
+
+	function ajaxPage(page){
+		//排序
+   		var url = "{:addon_url('leescore/goods/getList')}";
+   		var sort = $.cookie('orderby') ? (($.cookie('orderby') == 'fa-angle-down') ? 'desc' : 'asc') : 'desc';
+		var keywords = "{:input('get.keywords')}";
+		//查询条件
+		var paytype = $("input.input_paytype").val();
+		var category = $("input.input_category").val();
+		var score_start = $("#score-start").val();
+		var score_end = $("#score-end").val();
+		var money_start = $("#money-start").val();
+		var money_end = $("#money-end").val();
+		var param = {"paytype":paytype, "category":category, "score_start":score_start, "score_end": score_end, 'money_start': money_start, 'money_end': money_end,"field": $.cookie('field'), "sort": sort, "page": page, 'keywords': keywords};;
+        $.ajax({
+            url:url,
+            type:'post',
+            dataType:'json',
+            data: param,
+            success:function(list){
+				$(".page").html(list.page);
+				$(".goods-list").html(list.list);
+            }
+        });
+    }
+</script>
