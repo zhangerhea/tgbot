@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'karsonzhang/fastadmin',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => 'bdb6f84a97b51210f162e903fe58f3bea955be13',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '2059dac10e58b28bf02d08c697bb088fce565bd2',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -92,9 +92,9 @@
             'dev_requirement' => false,
         ),
         'karsonzhang/fastadmin' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => 'bdb6f84a97b51210f162e903fe58f3bea955be13',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '2059dac10e58b28bf02d08c697bb088fce565bd2',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
